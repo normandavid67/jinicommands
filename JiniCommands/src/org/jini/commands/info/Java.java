@@ -1,0 +1,101 @@
+/*
+ * Licensed under GNU GENERAL PUBLIC LICENSE Version 1 you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.gnu.org/licenses/gpl-1.0.txt
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ * For a copy of the License type 'license'
+ */
+package org.jini.commands.info;
+
+import jinicommands.JiniCmd;
+import org.apache.commons.cli.BasicParser;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.jini.commands.helper.TablePrinter;
+/**
+ * 
+ * @author Norman David <normandavid67@gmail.com>
+ * @since JiniCommands version 0.1
+ * @version 1.0
+ */
+
+public class Java extends JiniCmd {
+
+    CommandLineParser jcParser = new BasicParser();
+    Options jcOptions = new Options();
+    private boolean done;
+
+    public Java() {
+    }
+
+    @Override
+    public void setJCLIOptions() {
+        Option Help = new Option("h", "help", false, "Show Help.");
+        this.jcOptions.addOption(Help);
+    }
+
+    @Override
+    public void executeCommand() {
+
+        this.setJCLIOptions();
+
+        String args[] = this.convertToArray();
+
+        try {
+            CommandLine jcCmd = this.jcParser.parse(this.jcOptions, args);
+
+            if (jcCmd.hasOption("h")) {
+                this.printHelp();
+            }
+
+
+            if (this.done == false) {
+                String javaHome = System.getProperty("java.home");
+                String javaVendor = System.getProperty("java.vendor");
+                String javaVendorUrl = System.getProperty("java.vendor.url");
+                String javaVersion = System.getProperty("java.version");
+
+                TablePrinter helpTableHead = new TablePrinter("JVM", "Details");
+                if ((javaHome != null) && (javaHome.isEmpty() == false)) {
+                    helpTableHead.addRow("Installation directory for Java Runtime Environment (JRE)", javaHome);
+                }
+                if ((javaVendor != null) && (javaVendor.isEmpty() == false)) {
+                    helpTableHead.addRow("JRE vendor name", javaVendor);
+                }
+                if ((javaVendor != null) && (javaVendor.isEmpty() == false)) {
+                    helpTableHead.addRow("JRE vendor URL", javaVendorUrl);
+                }
+                
+                if ((javaVersion != null) && (javaVersion.isEmpty() == false)) {
+                    helpTableHead.addRow("JRE version number", javaVersion);
+                }
+                helpTableHead.print();
+            }
+
+        } catch (org.apache.commons.cli.ParseException ex) {
+            this.setJcError(true);
+            this.addErrorMessages("Error :" + ex.getMessage());
+        }
+    }
+
+    private void printHelp() {
+        TablePrinter helpTableHead = new TablePrinter("Command Name : ", "java");
+        helpTableHead.addRow("SYNOPSIS : ", "javainfo [OPTION]...");
+        helpTableHead.addRow("DESCRIPTION : ", "Prints Java Info.");
+        helpTableHead.print();
+        TablePrinter helpTable = new TablePrinter("Short Opt", "Long Opt", "Argument", "Desc", "Short Option Example", "Long Option Example");
+        helpTable.addRow("-h", "--help", "not required", "Show this help.", "help -h", "help --help");
+        helpTable.print();
+
+        this.done = true;
+    }
+}
