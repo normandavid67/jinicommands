@@ -1,16 +1,32 @@
 /*
- * Licensed under GNU GENERAL PUBLIC LICENSE Version 1 you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.gnu.org/licenses/gpl-1.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- * For a copy of the License type 'license'
+New BSD License
+Copyright (c) 2012, Norman David <normandavid67@gmail.com>
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the <organization> nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL Norman David BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+  
+ For a copy of the License type 'license'
  */
 package org.jini.commands.utils;
 
@@ -24,8 +40,10 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.jini.commands.helper.TablePrinter;
+
 /**
- * 
+ * Print Calendar
+ *
  * @author Norman David <normandavid67@gmail.com>
  * @since JiniCommands version 0.1
  * @version 1.0
@@ -40,6 +58,10 @@ public class PrintCalendar extends JiniCmd {
     public PrintCalendar() {
     }
 
+    /**
+     * In this method all the specific Command Line options are defined.
+     *
+     */
     @Override
     @SuppressWarnings("static-access")
     public void setJCLIOptions() {
@@ -51,6 +73,9 @@ public class PrintCalendar extends JiniCmd {
 
     }
 
+    /**
+     * In this method all the execution of the specific Command takes place
+     */
     @Override
     public void executeCommand() {
         this.setJCLIOptions();
@@ -176,7 +201,12 @@ public class PrintCalendar extends JiniCmd {
 
     }
 
-    /** Print the calendar for a month in a year */
+    /**
+     * Print the calendar for a month in a year
+     *
+     * @param year
+     * @param month
+     */
     void printMonth(int year, int month) {
         printMonthTitle(year, month);
         printMonthBody(year, month);
@@ -184,7 +214,12 @@ public class PrintCalendar extends JiniCmd {
         this.done = true;
     }
 
-    /** Print the month title, e.g., May, 1999 */
+    /**
+     * Print the month title, e.g., May, 1999
+     *
+     * @param year
+     * @param month
+     */
     void printMonthTitle(int year, int month) {
         System.out.println("         " + getMonthName(month)
                 + " " + year);
@@ -192,7 +227,12 @@ public class PrintCalendar extends JiniCmd {
         System.out.println(" Sun Mon Tue Wed Thu Fri Sat");
     }
 
-    /** Get the English name for the month */
+    /**
+     * Get the English name for the month
+     *
+     * @param month
+     * @return
+     */
     String getMonthName(int month) {
         String monthName = null;
         switch (month) {
@@ -236,7 +276,12 @@ public class PrintCalendar extends JiniCmd {
         return monthName;
     }
 
-    /** Print month body */
+    /**
+     * Print month body
+     *
+     * @param year
+     * @param month
+     */
     void printMonthBody(int year, int month) {
         // Get start day of the week for the first date in the month
         int startDay = getStartDay(year, month);
@@ -245,7 +290,7 @@ public class PrintCalendar extends JiniCmd {
         int numberOfDaysInMonth = getNumberOfDaysInMonth(year, month);
 
         // Pad space before the first day of the month
-       
+
         for (int i = 0; i < startDay; i++) {
             System.out.print("    ");
         }
@@ -265,7 +310,13 @@ public class PrintCalendar extends JiniCmd {
         System.out.println();
     }
 
-    /** Get the start day of month/1/year */
+    /**
+     * Get the start day of month/1/year
+     *
+     * @param year
+     * @param month
+     * @return
+     */
     int getStartDay(int year, int month) {
         final int START_DAY_FOR_JAN_1_1800 = 3;
         // Get total number of days from 1/1/1800 to month/1/year
@@ -275,7 +326,13 @@ public class PrintCalendar extends JiniCmd {
         return (totalNumberOfDays + START_DAY_FOR_JAN_1_1800) % 7;
     }
 
-    /** Get the total number of days since January 1, 1800 */
+    /**
+     * Get the total number of days since January 1, 1800
+     *
+     * @param year
+     * @param month
+     * @return
+     */
     int getTotalNumberOfDays(int year, int month) {
         int total = 0;
 
@@ -296,7 +353,13 @@ public class PrintCalendar extends JiniCmd {
         return total;
     }
 
-    /** Get the number of days in a month */
+    /**
+     * Get the number of days in a month
+     *
+     * @param year
+     * @param month
+     * @return
+     */
     int getNumberOfDaysInMonth(int year, int month) {
         if (month == 1 || month == 3 || month == 5 || month == 7
                 || month == 8 || month == 10 || month == 12) {
@@ -314,11 +377,20 @@ public class PrintCalendar extends JiniCmd {
         return 0; // If month is incorrect
     }
 
-    /** Determine if it is a leap year */
+    /**
+     * Determine if it is a leap year
+     *
+     * @param year
+     * @return
+     */
     static boolean isLeapYear(int year) {
         return year % 400 == 0 || (year % 4 == 0 && year % 100 != 0);
     }
 
+    /**
+     * Prints out all Command Line Options in a table
+     *
+     */
     private void printHelp() {
         TablePrinter helpTableHead = new TablePrinter("Command Name : ", "calendar");
         helpTableHead.addRow("SYNOPSIS : ", " calendar [OPTION]...");

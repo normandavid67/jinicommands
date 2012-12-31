@@ -1,14 +1,32 @@
 /*
- * Licensed under GNU GENERAL PUBLIC LICENSE Version 1 you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.gnu.org/licenses/gpl-1.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+New BSD License
+Copyright (c) 2012, Norman David <normandavid67@gmail.com>
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the <organization> nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL Norman David BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+  
+ For a copy of the License type 'license'
  */
 package org.jini.commands.files;
 
@@ -33,8 +51,10 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.jini.commands.files.filters.HiddenFileFilter;
 import org.jini.commands.files.filters.SimpleFileFilter;
 import org.jini.commands.helper.TablePrinter;
+
 /**
- * 
+ * Copy Files
+ *
  * @author Norman David <normandavid67@gmail.com>
  * @since JiniCommands version 0.1
  * @version 1.0
@@ -57,6 +77,10 @@ public class JiniCopyFiles extends JiniCmd {
         this.jcList.add(file);
     }
 
+    /**
+     * In this method all the Command specific Command Line options are defined.
+     *
+     */
     @Override
     @SuppressWarnings("static-access")
     public void setJCLIOptions() {
@@ -77,6 +101,9 @@ public class JiniCopyFiles extends JiniCmd {
 
     }
 
+    /**
+     * In this method all the execution of the specific Command takes place
+     */
     @Override
     @SuppressWarnings("static-access")
     public void executeCommand() {
@@ -162,9 +189,11 @@ public class JiniCopyFiles extends JiniCmd {
             this.setJcError(true);
             this.addErrorMessages("Error :" + ex.getMessage());
         }
-
     }
 
+    /**
+     * Copy file with wildcard options
+     */
     private void copyWildCardFiles() {
         try {
             this.getWildCardFileList();
@@ -190,6 +219,10 @@ public class JiniCopyFiles extends JiniCmd {
         }
     }
 
+    /**
+     * Copy hidden files
+     *
+     */
     private void copyHiddenFiles() {
         try {
             this.getHiddenFileList();
@@ -215,6 +248,10 @@ public class JiniCopyFiles extends JiniCmd {
         }
     }
 
+    /**
+     * Copy normal files
+     *
+     */
     private void copySimpleFiles() {
         try {
             this.getSimpleFileList();
@@ -243,6 +280,13 @@ public class JiniCopyFiles extends JiniCmd {
         }
     }
 
+    /**
+     * Original files are never overwritten. In such a case the new file name is
+     * created with a timestamp.
+     *
+     * @param FileName
+     * @return
+     */
     private String createNewFileName(String FileName) {
 
         String tStamp = this.getTimeStamp();
@@ -252,8 +296,13 @@ public class JiniCopyFiles extends JiniCmd {
 
     }
 
-    // Copies src file to dst file.
-    // If the dst file does not exist, it is created
+    /**
+     * Copies src file to dst file If the dst file does not exist, it is created
+     *
+     * @param src
+     * @param dst
+     * @throws IOException
+     */
     private void copy(File src, File dst) throws IOException {
         InputStream in = new FileInputStream(src);
         OutputStream out = new FileOutputStream(dst);
@@ -268,6 +317,10 @@ public class JiniCopyFiles extends JiniCmd {
         out.close();
     }
 
+    /**
+     * Compare To From Directories
+     *
+     */
     private void compareToFromDirs() {
 
         if ((this.jcError == false) && (this.fromLocation == null)) {
@@ -288,6 +341,12 @@ public class JiniCopyFiles extends JiniCmd {
 
     }
 
+    /**
+     * Directory tester
+     *
+     * @param directoryName
+     * @return
+     */
     private boolean checkFromDir(String directoryName) {
         if ((directoryName != null) && (directoryName.length() > 0)) {
             File dirTest = new File(directoryName);
@@ -301,6 +360,12 @@ public class JiniCopyFiles extends JiniCmd {
         return false;
     }
 
+    /**
+     * Directory Tester
+     *
+     * @param directoryName
+     * @return
+     */
     private boolean isDir(String directoryName) {
         if ((directoryName != null) && (directoryName.length() > 0)) {
             File dirTest = new File(directoryName);
@@ -313,12 +378,23 @@ public class JiniCopyFiles extends JiniCmd {
         return false;
     }
 
+    /**
+     * Get a list of files from a Array
+     *
+     * @param fileFilter
+     * @return
+     */
     private File[] getFromFileArray(FileFilter fileFilter) {
         File dir = new File(this.fromLocation);
         File[] files = dir.listFiles(fileFilter);
         return files;
     }
 
+    /**
+     * Get a normal file list
+     *
+     * @throws IOException
+     */
     private void getSimpleFileList() throws IOException {
         if ((this.getJcError() == false) && (this.done == false)) {
             File[] files = this.getFromFileArray(new SimpleFileFilter(this.copyAll));
@@ -330,6 +406,11 @@ public class JiniCopyFiles extends JiniCmd {
         }
     }
 
+    /**
+     * Get a hidden file list
+     *
+     * @throws IOException
+     */
     private void getHiddenFileList() throws IOException {
         if ((this.getJcError() == false) && (this.done == false)) {
             File[] files = this.getFromFileArray(new HiddenFileFilter(this.copyAll));
@@ -340,6 +421,11 @@ public class JiniCopyFiles extends JiniCmd {
         }
     }
 
+    /**
+     * Get a wild card file list
+     *
+     * @throws IOException
+     */
     private void getWildCardFileList() throws IOException {
         if ((this.getJcError() == false) && (this.done == false)) {
             File[] files = this.getFromFileArray(new WildcardFileFilter(this.wildcardOpt));
@@ -350,14 +436,28 @@ public class JiniCopyFiles extends JiniCmd {
         }
     }
 
+    /**
+     * Getter method of the location of the user.
+     *
+     * @return
+     */
     private static String getWorkingDirectory() {
         return System.getProperty("user.dir");
     }
 
+    /**
+     * Getter for a timestamp
+     *
+     * @return
+     */
     private String getTimeStamp() {
         return Calendar.getInstance().getTime().toString();
     }
 
+    /**
+     * Prints out all Command Line Options in a table
+     *
+     */
     private void printHelp() {
 
         TablePrinter helpTableHead = new TablePrinter("Command Name : ", "copyfiles");

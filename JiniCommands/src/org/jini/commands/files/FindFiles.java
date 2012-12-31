@@ -1,16 +1,32 @@
 /*
- * Licensed under GNU GENERAL PUBLIC LICENSE Version 1 you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.gnu.org/licenses/gpl-1.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- * For a copy of the License type 'license'
+New BSD License
+Copyright (c) 2012, Norman David <normandavid67@gmail.com>
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the <organization> nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL Norman David BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+  
+ For a copy of the License type 'license'
  */
 package org.jini.commands.files;
 
@@ -32,7 +48,8 @@ import org.jini.commands.helper.TablePrinter;
 import org.jini.commands.utils.PrintChar;
 
 /**
- * 
+ * File Search
+ *
  * @author Norman David <normandavid67@gmail.com>
  * @since JiniCommands version 0.1
  * @version 1.0
@@ -50,6 +67,10 @@ public class FindFiles extends JiniCmd {
     public FindFiles() {
     }
 
+    /**
+     * In this method all the Command specific Command Line options are defined.
+     *
+     */
     @Override
     @SuppressWarnings("static-access")
     public void setJCLIOptions() {
@@ -68,6 +89,9 @@ public class FindFiles extends JiniCmd {
 
     }
 
+    /**
+     * In this method all the execution of the specific Command takes place
+     */
     @Override
     public void executeCommand() {
 
@@ -145,6 +169,12 @@ public class FindFiles extends JiniCmd {
         }
     }
 
+    /**
+     * Directory tester
+     *
+     * @param directoryName
+     * @return
+     */
     private boolean isDir(String directoryName) {
         if ((directoryName != null) && (directoryName.length() > 0)) {
             File dirTest = new File(directoryName);
@@ -157,10 +187,22 @@ public class FindFiles extends JiniCmd {
         return false;
     }
 
+    /**
+     * Getter method of the location of the user.
+     *
+     * @return
+     */
     private static String getWorkingDirectory() {
         return System.getProperty("user.dir");
     }
 
+    /**
+     * Find Files with a wild card pattern
+     *
+     * @param dirName
+     * @param wildCardPattern
+     * @param recursive
+     */
     void findFilesWithWildCard(String dirName, String wildCardPattern, boolean recursive) {
 
         PrintChar printChar = new PrintChar();
@@ -246,6 +288,13 @@ public class FindFiles extends JiniCmd {
         this.done = true;
     }
 
+    /**
+     * Search for files with specific extensions
+     *
+     * @param dirName
+     * @param extensions
+     * @param recursive
+     */
     void findFileWithExtension(String dirName, String[] extensions, boolean recursive) {
         PrintChar printChar = new PrintChar();
         printChar.setOutPutChar(">");
@@ -324,6 +373,12 @@ public class FindFiles extends JiniCmd {
         this.done = true;
     }
 
+    /**
+     * Print a short info table
+     *
+     * @param infDesc
+     * @param inf
+     */
     private void printTable(String infDesc, String inf) {
 
         if (((infDesc != null) && (infDesc.length() > 0)) && ((inf != null) && (inf.length() > 0))) {
@@ -335,6 +390,10 @@ public class FindFiles extends JiniCmd {
 
     }
 
+    /**
+     * Prints out all Command Line Options in a table
+     *
+     */
     private void printHelp() {
 
         TablePrinter helpTableHead = new TablePrinter("Command Name : ", "findfiles / findfile");
