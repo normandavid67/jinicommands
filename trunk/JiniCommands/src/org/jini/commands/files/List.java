@@ -1,16 +1,32 @@
 /*
- * Licensed under GNU GENERAL PUBLIC LICENSE Version 1 you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.gnu.org/licenses/gpl-1.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- * For a copy of the License type 'license'
+New BSD License
+Copyright (c) 2012, Norman David <normandavid67@gmail.com>
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the <organization> nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL Norman David BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+  
+ For a copy of the License type 'license'
  */
 package org.jini.commands.files;
 
@@ -30,7 +46,8 @@ import org.jini.commands.files.filters.SimpleFileFilter;
 import org.jini.commands.helper.TablePrinter;
 
 /**
- * 
+ * Lists all files/Directories in a specific location
+ *
  * @author Norman David <normandavid67@gmail.com>
  * @since JiniCommands version 0.1
  * @version 1.0
@@ -44,7 +61,7 @@ public class List extends JiniCmd {
     boolean withDetails = false;
     String resultType = "string";
     boolean showAll = false;
-    String resultFormat = "string"; // string | xml ¦ json(maybe)
+    String resultFormat = "string";
     boolean orderByDate = false;
     String orderByDateOpt = "asc";
     boolean orderByName = false;
@@ -54,6 +71,10 @@ public class List extends JiniCmd {
     public List() {
     }
 
+    /**
+     * In this method all the Command specific Command Line options are defined.
+     *
+     */
     @Override
     @SuppressWarnings("static-access")
     public void setJCLIOptions() {
@@ -79,14 +100,15 @@ public class List extends JiniCmd {
         this.jcOptions.addOptionGroup(jcGroup2);
     }
 
+    /**
+     * In this method all the execution of the specific Command takes place
+     */
     @Override
     public void executeCommand() {
 
         this.setJCLIOptions();
 
-
         String args[] = this.convertToArray();
-
         try {
             CommandLine jcCmd = this.jcParser.parse(this.jcOptions, args);
 
@@ -218,6 +240,12 @@ public class List extends JiniCmd {
         }
     }
 
+    /**
+     * Getter method for all the Directories
+     *
+     * @param showAll
+     * @throws IOException
+     */
     private void getDirList(boolean showAll) throws IOException {
         if (this.getJcError() == false) {
             File[] files = this.getFileArray(new DirFilter(this.showAll));
@@ -228,6 +256,12 @@ public class List extends JiniCmd {
         }
     }
 
+    /**
+     * Getter method for all normal files
+     *
+     * @param showAll
+     * @throws IOException
+     */
     private void getFileList(boolean showAll) throws IOException {
         if (this.getJcError() == false) {
             File[] files = this.getFileArray(new SimpleFileFilter(showAll));
@@ -238,6 +272,12 @@ public class List extends JiniCmd {
         }
     }
 
+    /**
+     * Getter method for all Directories
+     *
+     * @param showAll
+     * @throws IOException
+     */
     private void getFileDirList(boolean showAll) throws IOException {
         if (this.getJcError() == false) {
             File[] files = this.getFileArray(new FileDirFilter(showAll));
@@ -248,6 +288,11 @@ public class List extends JiniCmd {
         }
     }
 
+    /**
+     * Getter method for search with wildcard options
+     *
+     * @param wildCardOpt
+     */
     private void getListWildCard(String wildCardOpt) {
         if (this.getJcError() == false) {
             File dir = new File(this.directory);
@@ -260,6 +305,13 @@ public class List extends JiniCmd {
         }
     }
 
+    /**
+     * Print the results
+     *
+     * @param withDetails
+     * @param fileList
+     * @return
+     */
     private boolean printResults(boolean withDetails, ArrayList<File> fileList) {
 
         if (this.getJcError() == false) {
@@ -302,22 +354,21 @@ public class List extends JiniCmd {
 
                 tableF.print();
             } else {
-
-
-
-                // TablePrinter tableF = new TablePrinter("Name");
                 for (File v : fileList) {
-                    //tableF.addRow(v.getName());
                     System.out.println(v.getName());
-
                 }
-                //tableF.print();
             }
         }
 
         return true;
     }
 
+    /**
+     * Get all the files from a array
+     *
+     * @param fileFilter
+     * @return
+     */
     private File[] getFileArray(FileFilter fileFilter) {
         File dir = new File(this.directory);
         File[] files = dir.listFiles(fileFilter);
@@ -348,19 +399,19 @@ public class List extends JiniCmd {
         this.jcList.add(file);
     }
 
+    /**
+     * Getter method of the location of the user.
+     *
+     * @return
+     */
     private static String getWorkingDirectory() {
-        File dir1 = new File(".");
-
-        try {
-            //System.out.println("Current dir : " + dir1.getCanonicalPath());
-            return dir1.getCanonicalPath();
-        } catch (Exception e) {
-        }
-
-        //return System.getProperty("user.dir");
-        return "";
+        return System.getProperty("user.dir");
     }
 
+    /**
+     * Prints out all Command Line Options in a table
+     *
+     */
     private void printHelp() {
         TablePrinter helpTableHead = new TablePrinter("Command Name : ", "list");
         helpTableHead.addRow("SYNOPSIS : ", " list [OPTION]... [DIRECTORY]..");
@@ -370,7 +421,6 @@ public class List extends JiniCmd {
         TablePrinter helpTable = new TablePrinter("Short Opt", "Long Opt", "Argument", "Desc", "Short Option Example", "Long Option Example");
         helpTable.addRow("-h", "--help", "not required", "Show this help.", "list -h", "list --help");
 
-        // helpTable.addRow("-d", "--directory", "required", "Path to the directory. (Default is current Directory)", "list -d c:\\ ", "list --directory c:\\");
         helpTable.addRow("-p", "--path", "required", "Path to the directory. (Default is current Directory)", "list -p c:\\", "list --path c:\\");
 
         helpTable.addRow("-wd", "--withdetails", "not required", "Display table of files/directories with details", "list -p c:\\ -wd ", "list --path c:\\ --withdetails ");

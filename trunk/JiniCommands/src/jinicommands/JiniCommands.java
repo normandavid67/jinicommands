@@ -1,16 +1,32 @@
 /*
- * Licensed under GNU GENERAL PUBLIC LICENSE Version 1 you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.gnu.org/licenses/gpl-1.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- * For a copy of the License type 'license'
+ New BSD License
+ Copyright (c) 2012, Norman David <normandavid67@gmail.com>
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+ * Redistributions of source code must retain the above copyright
+ notice, this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright
+ notice, this list of conditions and the following disclaimer in the
+ documentation and/or other materials provided with the distribution.
+ * Neither the name of the <organization> nor the
+ names of its contributors may be used to endorse or promote products
+ derived from this software without specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL Norman David BE LIABLE FOR ANY
+ DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+  
+ For a copy of the License type 'license'
  */
 package jinicommands;
 
@@ -139,6 +155,10 @@ public class JiniCommands {
                         case JiniHelp:
                             setArgsExec(new JiniHelp(), args);
                             break;
+                        // Prints a list of all Jini Commands (alias of 'help')
+                        case JiniQuestion:
+                            setArgsExec(new JiniHelp(), args);
+                            break;
                         //  Prints OS Information
                         case OS:
                             setArgsExec(new OS(), args);
@@ -199,8 +219,10 @@ public class JiniCommands {
                         case JiniLicense:
                             setArgsExec(new JiniLicense(), args);
                             break;
-
-
+                       // Print JiniCommands License    
+                        case JiniAbout:
+                            setArgsExec(new About(), args);
+                            break;
                     }
                 }
             }
@@ -257,18 +279,17 @@ public class JiniCommands {
         Date date = new Date();
         SimpleDateFormat ft = new SimpleDateFormat("yyyy");
 
-        //System.out.println("JiniCommands is a platform independant command line application written in Java. ");
-        System.out.println("Jinicommands provides some easy to use commands for e.g. findfiles, zipdir/unzip... Type 'help' for a full list of commands.");
         System.out.println("JiniCommands version " + JiniLicense.getJiniCommandsVersion() + ", Copyright (C) " + ft.format(date) + " Norman David");
         System.out.println("");
         System.out.println("Disclaimer : This program is distributed in the hope that it will be useful,");
         System.out.println("but WITHOUT ANY WARRANTY; without even the implied warranty of");
-        System.out.println("MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the");
-        System.out.println("GNU General Public License for more details.");
+        System.out.println("MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  ");
 
         System.out.println("");
-
+        System.out.println("Type 'about' for information on JiniCommands.");
+        System.out.println("Type 'help' or '?' for a list of all commands.");
         System.out.println("Type 'license' for License details.");
+        System.out.println("");
     }
 
     /**

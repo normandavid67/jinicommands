@@ -1,16 +1,32 @@
 /*
- * Licensed under GNU GENERAL PUBLIC LICENSE Version 1 you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.gnu.org/licenses/gpl-1.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- * For a copy of the License type 'license'
+New BSD License
+Copyright (c) 2012, Norman David <normandavid67@gmail.com>
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the <organization> nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL Norman David BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+  
+ For a copy of the License type 'license'
  */
 package org.jini.commands.compress;
 
@@ -51,8 +67,7 @@ public class ZipDirectory extends JiniCmd {
     String directoryToZip = "";
 
     /**
-     *
-     * Setter method for Command Line Options
+     * In this method all the Command specific Command Line options are defined.
      *
      */
     @Override
@@ -64,8 +79,7 @@ public class ZipDirectory extends JiniCmd {
     }
 
     /**
-     * Execute the command
-     *
+     * In this method all the execution of the specific Command takes place
      */
     @Override
     @SuppressWarnings("static-access")
@@ -153,18 +167,16 @@ public class ZipDirectory extends JiniCmd {
             this.addErrorMessages("Error :" + ex.getMessage());
         }
     }
-    
-    
+
     /**
      * Move file from one location to another
-     * 
-     * 
+     *
+     *
      * @param fromLocation
-     * @param toLocation 
+     * @param toLocation
      */
-
     private void moveFile(String fromLocation, String toLocation) {
-        
+
         try {
 
             File fromfile = new File(fromLocation);
@@ -196,25 +208,22 @@ public class ZipDirectory extends JiniCmd {
         }
 
     }
-    
+
     /**
      * Getter method for OS specific temporary file
-     * 
-     * @return 
+     *
+     * @return
      */
-
     private String getOsSpecificTempDirectory() {
         return System.getProperty("java.io.tmpdir");
     }
-    
-    
 
     /**
      * Zip a directory
-     * 
+     *
      * @param directory
      * @param zip
-     * @throws IOException 
+     * @throws IOException
      */
     public void zipDirectory(File directory, File zip) throws IOException {
         ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zip));
@@ -226,13 +235,12 @@ public class ZipDirectory extends JiniCmd {
 
     /**
      * zip helper method
-     * 
+     *
      * @param directory
      * @param base
      * @param zos
-     * @throws IOException 
+     * @throws IOException
      */
-    
     private void zip(File directory, File base, ZipOutputStream zos) throws IOException {
         File[] files = directory.listFiles();
         byte[] buffer = new byte[8192];
@@ -252,17 +260,16 @@ public class ZipDirectory extends JiniCmd {
             }
         }
     }
-    
+
     /**
-     * Unzip file 
-     * 
+     * Unzip file
+     *
      * Note: unused in this command
-     * 
+     *
      * @param zip
      * @param extractTo
-     * @throws IOException 
+     * @throws IOException
      */
-
     public void unzip(File zip, File extractTo) throws IOException {
         ZipFile archive = new ZipFile(zip);
         Enumeration e = archive.entries();
@@ -294,10 +301,9 @@ public class ZipDirectory extends JiniCmd {
     }
 
     /**
-     * Print out all the options of zipdir 
-     * 
+     * Print out all the options of zipdir
+     *
      */
-    
     private void printHelp() {
         TablePrinter helpTableHead = new TablePrinter("Command Name : ", "zipdir");
         helpTableHead.addRow("SYNOPSIS : ", "zipdir [OPTION]...");
@@ -313,24 +319,22 @@ public class ZipDirectory extends JiniCmd {
 
         this.done = true;
     }
-    
+
     /**
      * Getter method of the users working directory
-     * 
-     * @return 
+     *
+     * @return
      */
-
     private static String getWorkingDirectory() {
         return System.getProperty("user.dir");
     }
-    
+
     /**
      * Directory test method
-     * 
+     *
      * @param directoryName
-     * @return 
+     * @return
      */
-
     private boolean isDir(String directoryName) {
         if ((directoryName != null) && (directoryName.length() > 0)) {
             File dirTest = new File(directoryName);
@@ -342,14 +346,13 @@ public class ZipDirectory extends JiniCmd {
         }
         return false;
     }
-    
+
     /**
      * Getter method of directory name
-     * 
+     *
      * @param path
-     * @return 
+     * @return
      */
-
     private String getDirName(String path) {
         if ((path != null) && (path.length() > 0)) {
             File f = new File(path);
