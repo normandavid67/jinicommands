@@ -50,7 +50,7 @@ public class JiniLicense extends JiniCmd {
 
     CommandLineParser jcParser = new BasicParser();
     Options jcOptions = new Options();
-    private boolean done;
+   
     static String jiniVersion = "0.1";
 
     @Override
@@ -68,7 +68,6 @@ public class JiniLicense extends JiniCmd {
     public JiniLicense() {
 
         Date date = new Date();
-        SimpleDateFormat ft = new SimpleDateFormat("dd.MM.yyyy");
         SimpleDateFormat yy = new SimpleDateFormat("yyyy");
 
         System.out.println("JiniCommands Version , " + JiniLicense.getJiniCommandsVersion() + "  29.12.2012" );
