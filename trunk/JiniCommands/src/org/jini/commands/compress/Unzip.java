@@ -224,24 +224,7 @@ public class Unzip extends JiniCmd {
         return System.getProperty("user.dir");
     }
 
-    /**
-     * Check if a given path is a Directory or not
-     *
-     * @param String directoryName
-     * @return Boolean
-     */
-    private boolean isDir(String directoryName) {
-        if ((directoryName != null) && (directoryName.length() > 0)) {
-            File dirTest = new File(directoryName);
-            if (dirTest.isDirectory()) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        return false;
-    }
-
+    
     /**
      * File Check
      *
@@ -262,20 +245,7 @@ public class Unzip extends JiniCmd {
         return false;
     }
 
-    /**
-     * Get Directory name from path
-     *
-     * @param path
-     * @return
-     */
-    private String getDirName(String path) {
-        if ((path != null) && (path.length() > 0)) {
-            File f = new File(path);
-            return f.getName();
-        }
-        return "";
-    }
-
+    
     /**
      * Create a directory
      *
