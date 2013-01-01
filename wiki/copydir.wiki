@@ -5,33 +5,3 @@
 Copy Directory (Recursive) from one location to another
 
 = Details =
-<br>
-<br>------------------------------------------------------------------------
-<br>|-Command-Name-:--|-list-----------------------------------------------|
-<br>------------------------------------------------------------------------
-<br>|-SYNOPSIS-:------|--list-[OPTION]...-[DIRECTORY]..--------------------|
-<br>|-DESCRIPTION-:---|--Print-a-list-of-files/directories-in-a-Directory.-|
-<br>------------------------------------------------------------------------
-<br>
-<br>--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-<br>|-Short-Opt-|-Long-Opt------|-Argument--------------|-Desc--------------------------------------------------|-Short-Option-Example-------|-Long-Option-Example-----------------------------|
-<br>--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-<br>|--h--------|---help--------|-not-required----------|-Show-this-help.---------------------------------------|-list--h--------------------|-list---help-------------------------------------|
-<br>|--p--------|---path--------|-required--------------|-Path-to-the-directory.-(Default-is-current-Directory)-|-list--p-c:\----------------|-list---path-c:\---------------------------------|
-<br>|--wd-------|---withdetails-|-not-required----------|-Display-table-of-files/directories-with-details-------|-list--p-c:\--wd------------|-list---path-c:\---withdetails-------------------|
-<br>|--all------|---showall-----|-not-required----------|-Include-files/directories-whose-name-starts-with-.----|-list--p-c:\--wd--all-------|-list---path-c:\---withdetails---showall---------|
-<br>|--fo-------|---filesonly---|-not-required----------|-List-only-Files.--------------------------------------|-list--p-c:\--wd--fo--------|-list---path-c:\---withdetails---filesonly-------|
-<br>|--do-------|---dirsonly----|-not-required----------|-List-only-Directories.--------------------------------|-list--p-c:\--wd--do--------|-list---path-c:\---withdetails---dirsonly--------|
-<br>|--wc-------|---wildcard----|-required--------------|-Wild-Card-Search.-------------------------------------|-list--p-c:\--wd--wc-*.html-|-list---path-c:\---withdetails---wildcard-*.sys--|
-<br>|--obd------|---orderbydate-|-required-[asc-|-desc]-|-Order-by-Date-----------------------------------------|-list--p-c:\--wd--obd-asc---|-list---path-c:\---withdetails---orderbydate-asc-|
-<br>|--obn------|---orderbyname-|-required-[asc-|-desc]-|-Order-by-Name-----------------------------------------|-list--p-c:\--wd--obn-asc---|-list---path-c:\---withdetails---orderbyname-asc-|
-<br>--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-<br>
-<br>----------------------------------------------------------------------------------------------------------------
-<br>|-Option-Groups-:-------------------|--------------------------------------------------------------------------|
-<br>----------------------------------------------------------------------------------------------------------------
-<br>|---filesonly---dirsonly---wildcard-|--These-options-are-grouped.-i.e-only-one-can-be-defined-at-a-given-time.-|
-<br>|---orderbydate---orderbyname-------|--These-options-are-grouped.-i.e-only-one-can-be-defined-at-a-given-time.-|
-<br>----------------------------------------------------------------------------------------------------------------
-<br>
-<br>
