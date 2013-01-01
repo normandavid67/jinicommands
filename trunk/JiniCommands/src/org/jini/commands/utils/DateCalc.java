@@ -138,6 +138,7 @@ public class DateCalc extends JiniCmd {
                     try {
                         add = Integer.parseInt(addVals[1]);
                     } catch (Exception x) {
+                        x.toString();
                         this.setJcError(true);
                         this.addErrorMessages("Error : [" + addVals[1] + "] in not a number.");
                     }
