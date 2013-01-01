@@ -34,9 +34,6 @@ package org.jini.commands.info;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import jinicommands.JiniCmd;
-import org.apache.commons.cli.BasicParser;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.Options;
 
 /**
  *
@@ -48,9 +45,6 @@ import org.apache.commons.cli.Options;
  */
 public class JiniLicense extends JiniCmd {
 
-    CommandLineParser jcParser = new BasicParser();
-    Options jcOptions = new Options();
-   
     static String jiniVersion = "0.1";
 
     @Override
