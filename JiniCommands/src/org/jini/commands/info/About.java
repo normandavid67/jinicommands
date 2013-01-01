@@ -47,9 +47,6 @@ import org.apache.commons.cli.Options;
  */
 public class About extends JiniCmd {
 
-    CommandLineParser jcParser = new BasicParser();
-    Options jcOptions = new Options();
-    private boolean done;
     static String jiniVersion = "0.1";
 
     @Override
@@ -66,7 +63,6 @@ public class About extends JiniCmd {
     public About() {
         Date date = new Date();
         SimpleDateFormat ft = new SimpleDateFormat("dd.MM.yyyy");
-        SimpleDateFormat yy = new SimpleDateFormat("yyyy");
         
         System.out.println("JiniCommands is a platform independant command line application written in Java. ");
         System.out.println("Jinicommands provides some easy to use Unix like commands for e.g. cd, date, findfiles, zipdir/unzip... ");
