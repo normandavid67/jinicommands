@@ -60,7 +60,7 @@ public class Unzip extends JiniCmd {
     CommandLineParser jcParser = new BasicParser();
     Options jcOptions = new Options();
     private boolean done;
-    String directoryToZip = "";
+//    String directoryToZip = "";
 
     /**
      * In this method all the specific Command Line options are defined.
@@ -285,9 +285,9 @@ public class Unzip extends JiniCmd {
         File dstDir = new File(destinationDir);
 
         if (!dstDir.exists()) {
-            dstDir.mkdir();
+            
 
-            if (dstDir.exists()) {
+            if (dstDir.mkdir()) {
                 this.addResultMessages("Sucessfully created dir " + destinationDir);
             }
         } else {
