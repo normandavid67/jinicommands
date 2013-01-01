@@ -79,9 +79,9 @@ public class DeleteDir extends JiniCmd {
 
 
         try {
-            CommandLine jcCmd = null;
+            //CommandLine jcCmd = null;
             String args[] = this.convertToArray();
-            jcCmd = this.jcParser.parse(this.jcOptions, args);
+            CommandLine jcCmd = this.jcParser.parse(this.jcOptions, args);
 
             // Check for -h option
             if (jcCmd.hasOption('h')) {

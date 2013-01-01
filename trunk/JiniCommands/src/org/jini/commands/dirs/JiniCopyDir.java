@@ -87,10 +87,10 @@ public class JiniCopyDir extends JiniCmd {
     public void executeCommand() {
 
         this.setJCLIOptions();
-        CommandLine jcCmd = null;
+        //CommandLine jcCmd = null;
         String args[] = this.convertToArray();
         try {
-            jcCmd = this.jcParser.parse(this.jcOptions, args);
+            CommandLine jcCmd = this.jcParser.parse(this.jcOptions, args);
 
             // Check for -h option
             if (jcCmd.hasOption('h')) {
