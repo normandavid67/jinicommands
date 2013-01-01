@@ -58,7 +58,7 @@ public class JiniCopyDir extends JiniCmd {
 
     CommandLineParser jcParser = new BasicParser();
     Options jcOptions = new Options();
-    ArrayList<File> jcList = new ArrayList<File>();
+    //ArrayList<File> jcList = new ArrayList<File>();
     private boolean done;
     private String fromLocation;
     private String toLocation = getWorkingDirectory() + File.separator;
