@@ -34,7 +34,7 @@ import java.util.Locale;
 
 /**
  * OS Validator
- *
+ * 
  * @author Norman David <normandavid67@gmail.com>
  * @since JiniCommands version 0.1
  * @version 1.0
@@ -42,7 +42,7 @@ import java.util.Locale;
 public class OSValidator {
 
     public static boolean isWindows() {
-
+        // Convert all of the characters in this String to lower case using the rules of the given locale.
         Locale loc = Locale.getDefault();
         String os = System.getProperty("os.name").toLowerCase(loc);
         // windows
@@ -51,6 +51,7 @@ public class OSValidator {
     }
 
     public static boolean isMac() {
+        // Convert all of the characters in this String to lower case using the rules of the given locale.
         Locale loc = Locale.getDefault();
         String os = System.getProperty("os.name").toLowerCase(loc);
         // Mac
@@ -59,6 +60,7 @@ public class OSValidator {
     }
 
     public static boolean isUnix() {
+        // Convert all of the characters in this String to lower case using the rules of the given locale.
         Locale loc = Locale.getDefault();
         String os = System.getProperty("os.name").toLowerCase(loc);
         // linux or unix
@@ -67,6 +69,7 @@ public class OSValidator {
     }
 
     public static boolean isSolaris() {
+        // Convert all of the characters in this String to lower case using the rules of the given locale.
         Locale loc = Locale.getDefault();
         String os = System.getProperty("os.name").toLowerCase(loc);
         // Solaris
