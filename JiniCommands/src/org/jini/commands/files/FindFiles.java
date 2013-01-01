@@ -58,7 +58,6 @@ public class FindFiles extends JiniCmd {
 
     CommandLineParser jcParser = new BasicParser();
     Options jcOptions = new Options();
-    ArrayList<File> jcList = new ArrayList<File>();
     private boolean done;
     private boolean recursive = true;
     private String fromLocation = getWorkingDirectory();
