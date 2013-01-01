@@ -318,8 +318,9 @@ public class JiniCommands {
         // Print out the prompt
         System.out.print(prompt);
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        
         try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String line;
 
             while ((line = br.readLine()) != null) {
