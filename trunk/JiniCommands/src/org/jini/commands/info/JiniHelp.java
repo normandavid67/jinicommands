@@ -145,7 +145,7 @@ public class JiniHelp extends JiniCmd {
 
             for (JCLI j : JCLI.values()) {
                 String command = j.getJiniCommand();
-                String commandDesc = j.getShortDesc();
+               // String commandDesc = j.getShortDesc();
 
                 if (command.contains(search)) {
                     res.add(j);
