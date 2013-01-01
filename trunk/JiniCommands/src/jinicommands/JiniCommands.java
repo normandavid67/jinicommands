@@ -58,7 +58,6 @@ import org.jini.commands.utils.*;
  */
 public class JiniCommands {
 
-    String lastCmd = "";
     boolean cmdFound = false;
     static double minJVM = 1.6;
     static String prompt = "JiniCommands>";
@@ -108,7 +107,7 @@ public class JiniCommands {
                 // Compare the Enum to the Command line input
                 if (j.getJiniCommand().equals(args[0])) {
 
-                    // if found create a new object of the command and 
+                    // if found create a new object of the command class and 
                     // pass the Command line arguments to the new object                   
                     switch (j) {
                         // Lists files in a Directory
@@ -338,6 +337,7 @@ public class JiniCommands {
 
                     // Create an new instance of JiniCommands and pass the incomming CLI input 
                     JiniCommands jCds = new JiniCommands(args3);
+                    jCds.toString();
 
                     // Print out the prompt
                     System.out.print(prompt);
