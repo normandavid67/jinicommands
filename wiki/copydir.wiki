@@ -1,0 +1,27 @@
+#summary Copy Directory (Recursive) from one location to another
+
+= Introduction =
+
+Add your content here.
+
+
+= Details =
+
+<pre>
+-------------------------------------------------------------------
+| Command Name :  | copydir                                                                            |
+-------------------------------------------------------------------
+| SYNOPSIS :             |  copydir [OPTION]... [DIRECTORY]..                                  |
+| DESCRIPTION :       |  Copy directory from one location to another.                  |
+-------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Short Opt | Long Opt | Argument     | Desc                                                                   | Short Option Example   | Long Option Example       |
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| -h        | --help   | not required | Show this help.                                                        | list -h                | list --help               |
+| -f        | --from   | required     | Define source directory                                                | copydir -f C:\FOLDER1  | copydir -from C:\FOLDER1  |
+| -t        | --to     | not required | Define destination directory.                                          | copydir -t C:\FOLDER1  | copydir -to C:\FOLDER2    |
+|           |          |              | If not defined then the directory is written in the present directory. |                        |                           |
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+</pre>
