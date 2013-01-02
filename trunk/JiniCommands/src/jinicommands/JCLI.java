@@ -136,7 +136,7 @@ public enum JCLI {
     /**
      * Convert text/file from text to Binary and Binary to text.
      */
-    TextConvert("textconvert", "Convert text/file to Binary, Hexadecimal, Base64."),
+    TextConvert("textconvert", "Convert text/file from to Binary"),
     /**
      * Clears the prompt
      */
