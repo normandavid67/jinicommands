@@ -1,7 +1,0 @@
-#summary Copy Directory (Recursive) from one location to another
-
-= Introduction =
-
-Copy Directory (Recursive) from one location to another
-
-= Details =
