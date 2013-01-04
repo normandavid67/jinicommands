@@ -44,10 +44,10 @@ import java.util.Iterator;
  */
 public abstract class JiniCmd {
 
-    public ArrayList<String> jCmdList = new ArrayList<String>();
+    public ArrayList<String> jCmdList = new ArrayList<>();
     public Boolean jcError = false;
-    public ArrayList<String> errorMessages = new ArrayList<String>();
-    public ArrayList<String> resultMessages = new ArrayList<String>();
+    public ArrayList<String> errorMessages = new ArrayList<>();
+    public ArrayList<String> resultMessages = new ArrayList<>();
 
     /**
      * Setter method of the command line arguments
