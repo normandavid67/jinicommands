@@ -46,6 +46,7 @@ import org.jini.commands.files.FindFiles;
 import org.jini.commands.files.JiniCopyFiles;
 import org.jini.commands.files.List;
 import org.jini.commands.info.*;
+import org.jini.commands.multicast.MulticastSender;
 import org.jini.commands.utils.*;
 
 /**
@@ -222,6 +223,13 @@ public class JiniCommands {
                         case JiniAbout:
                             setArgsExec(new About(), args);
                             break;
+                            
+                            
+                        case MulticastSender:  
+                            setArgsExec(new MulticastSender(), args);
+                            break;
+                            
+                            
                     }
                 }
             }
