@@ -156,7 +156,9 @@ public enum JCLI {
     /**
      * Print JiniCommands License
      */
-    JiniLicense("license", "Print JiniCommands License");
+    JiniLicense("license", "Print JiniCommands License"),
+    
+    MulticastSender("multicastsender", "");
     
     private String jiniCommand;
     private String shortDesc;
