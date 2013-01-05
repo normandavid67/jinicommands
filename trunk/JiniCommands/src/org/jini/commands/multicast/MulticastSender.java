@@ -18,9 +18,18 @@ public class MulticastSender extends JiniCmd {
     int port;
     String multicastGroup;
     String message;
+    String file;
     CommandLineParser jcParser = new BasicParser();
     Options jcOptions = new Options();
     private boolean done;
+
+    public String getFile() {
+        return file;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
+    }
 
     public String getMessage() {
         return message;
@@ -71,7 +80,7 @@ public class MulticastSender extends JiniCmd {
             if (jcCmd.hasOption('h')) {
 
                 try {
-                   System.out.println(this.checkFileMD5("C:\\TEMP\\test.txt"));
+                    System.out.println(this.checkFileMD5("C:\\TEMP\\test.txt"));
                 } catch (NoSuchAlgorithmException ex) {
                     Logger.getLogger(MulticastSender.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -101,14 +110,32 @@ public class MulticastSender extends JiniCmd {
                 }
 
                 if (jcCmd.hasOption("f")) {
-                    this.setMessage(this.readMessageFile(jcCmd.getOptionValue("f").trim()));
+                    String fle = jcCmd.getOptionValue("f").trim();
+
+                    if (fle.length() > 0) {
+                        if (this.isFileCanRead(fle)) {
+                            this.setFile(fle.trim());
+                        } else {
+                            this.setJcError(true);
+                            this.addErrorMessages("Error : File does not exsist or is unreadable. " + fle);
+                        }
+                    }
                 }
-                System.out.println("Port : " + this.getPort());
-                System.out.println("getMulticastGroup : " + this.getMulticastGroup());
-                System.out.println("Message : " + this.getMessage());
 
                 if (this.jcError == false) {
+                    
+                    System.out.println("Port : " + this.getPort());
+                    System.out.println("getMulticastGroup : " + this.getMulticastGroup());
+                    System.out.println("Message : " + this.getMessage());
+                    System.out.println("File : " + this.getFile());
                     // this.startMulticastSender();
+                    try {
+                        System.out.println(this.checkFileMD5(this.getFile()));
+                    } catch (NoSuchAlgorithmException ex) {
+                        Logger.getLogger(MulticastSender.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                    
                 }
             }
 
@@ -149,6 +176,7 @@ public class MulticastSender extends JiniCmd {
 
     }
 // multicastsender -p 8888 -f C:\TEMP\test.txt -mcg 224.2.2.3
+// multicastsender -p 8888 -f /Users/norman/TEMP/test.txt -mcg 224.2.2.3
 
     public static void main(String[] args) {
 
@@ -184,33 +212,34 @@ public class MulticastSender extends JiniCmd {
         }
     }
 
-    private String readMessageFile(String file) {
-        
+    private String getFileContents(String FileName) {
+        StringBuilder resStr = new StringBuilder();
         try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
-
-            while (line != null) {
-                sb.append(line);
-                sb.append("\n");
-                line = br.readLine();
+            BufferedReader in = new BufferedReader(new FileReader(FileName));
+            String str;
+            while ((str = in.readLine()) != null) {
+                resStr.append(str);
             }
-            return sb.toString();
-        } catch (FileNotFoundException ex) {
+            in.close();
+        } catch (IOException e) {
             this.setJcError(true);
-            this.addErrorMessages("Error : Could not find File " + file);
-        } catch (IOException ex) {
-            this.setJcError(true);
-            this.addErrorMessages("Error : Could not read File " + file);
+            this.addErrorMessages("Error :" + e.toString());
         }
-        return "";
+        return resStr.toString();
     }
 
-    public  String checkFileMD5(String file) throws NoSuchAlgorithmException {
+    private boolean isFileCanRead(String path) {
+        File f = new File(path);
+        if ((f.isFile()) && (f.canRead())) {
+            return true;
+        }
+        return false;
+    }
+
+    public String checkFileMD5(String file) throws NoSuchAlgorithmException {
 
 
-        String pass = this.readMessageFile(file);
+        String pass = this.getFileContents(file);
         MessageDigest m = MessageDigest.getInstance("MD5");
         byte[] data = pass.getBytes();
         m.update(data, 0, data.length);
@@ -218,21 +247,20 @@ public class MulticastSender extends JiniCmd {
         return String.format("%1$032X", i);
     }
 
-    private void checkFileMD5() throws NoSuchAlgorithmException, FileNotFoundException, IOException {
-        System.out.println("In ...checkFileMD5");
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        InputStream is = new FileInputStream("C:\\TEMP\\test.txt");
-        try {
-            is = new DigestInputStream(is, md);
-            // read stream to EOF as normal...
-
-        } finally {
-            is.close();
-        }
-        byte[] digest = md.digest();
-        System.out.println(digest.toString());
-    }
-
+//    private void checkFileMD5() throws NoSuchAlgorithmException, FileNotFoundException, IOException {
+//        System.out.println("In ...checkFileMD5");
+//        MessageDigest md = MessageDigest.getInstance("MD5");
+//        InputStream is = new FileInputStream("/Users/norman/TEMP/test.txt");
+//        try {
+//            is = new DigestInputStream(is, md);
+//            // read stream to EOF as normal...
+//
+//        } finally {
+//            is.close();
+//        }
+//        byte[] digest = md.digest();
+//        System.out.println(digest.toString());
+//    }
     private void printHelp() {
     }
 }
