@@ -78,15 +78,7 @@ public class MulticastSender extends JiniCmd {
         try {
             CommandLine jcCmd = this.jcParser.parse(this.jcOptions, args);
             if (jcCmd.hasOption('h')) {
-
-                try {
-                    System.out.println(this.checkFileMD5("C:\\TEMP\\test.txt"));
-                } catch (NoSuchAlgorithmException ex) {
-                    Logger.getLogger(MulticastSender.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
                 printHelp();
-
             }
 
             if ((this.done == false) && (this.jcError == false)) {
@@ -123,19 +115,23 @@ public class MulticastSender extends JiniCmd {
                 }
 
                 if (this.jcError == false) {
-                    
+
                     System.out.println("Port : " + this.getPort());
                     System.out.println("getMulticastGroup : " + this.getMulticastGroup());
                     System.out.println("Message : " + this.getMessage());
                     System.out.println("File : " + this.getFile());
-                    // this.startMulticastSender();
+                    try {
+                        this.startMulticastSender();
+                    } catch (NoSuchAlgorithmException ex) {
+                        Logger.getLogger(MulticastSender.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     try {
                         System.out.println(this.checkFileMD5(this.getFile()));
                     } catch (NoSuchAlgorithmException ex) {
                         Logger.getLogger(MulticastSender.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    
-                    
+
+
                 }
             }
 
@@ -145,17 +141,32 @@ public class MulticastSender extends JiniCmd {
         }
     }
 
-    private void startMulticastSender() {
+    private void startMulticastSender() throws NoSuchAlgorithmException {
         byte[] outBuf;
+
         final int PORT = this.getPort();
-        String msg = this.getMessage();
         String mcastGroup = this.getMulticastGroup();
+        String fileName = this.getFile();
+
+        // initial Data
+        String msg = this.getFileContents(fileName);
+        String mdfiveSum = this.checkFileMD5(fileName);
+
 
         try {
             DatagramSocket socket = new DatagramSocket();
             long counter = 0;
             while (true) {
+
                 counter++;
+                if (counter == 10) {
+                    if (mdfiveSum.equals(this.checkFileMD5(fileName)) == false) {
+                        msg = this.getFileContents(fileName);
+                    }
+                    counter = 0;
+                }
+
+
                 outBuf = msg.getBytes();
 
                 //Send to multicast IP address and port
@@ -176,7 +187,7 @@ public class MulticastSender extends JiniCmd {
 
     }
 // multicastsender -p 8888 -f C:\TEMP\test.txt -mcg 224.2.2.3
-// multicastsender -p 8888 -f /Users/norman/TEMP/test.txt -mcg 224.2.2.3
+// multicastsender -p 8888 -f /Users/admin/Documents/TEST/test.txt -mcg 224.2.2.3
 
     public static void main(String[] args) {
 
@@ -237,8 +248,6 @@ public class MulticastSender extends JiniCmd {
     }
 
     public String checkFileMD5(String file) throws NoSuchAlgorithmException {
-
-
         String pass = this.getFileContents(file);
         MessageDigest m = MessageDigest.getInstance("MD5");
         byte[] data = pass.getBytes();
