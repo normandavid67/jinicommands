@@ -176,10 +176,10 @@ public class MulticastSender extends JiniCmd {
                 socket.send(outPacket);
 
                 System.out.println("Server sends : (" + counter + ") " + msg);
-                try {
+                /*try {
                     Thread.sleep(500);
                 } catch (InterruptedException ie) {
-                }
+                }*/
             }
         } catch (IOException ioe) {
             System.out.println(ioe);
@@ -188,7 +188,7 @@ public class MulticastSender extends JiniCmd {
     }
 // multicastsender -p 8888 -f C:\TEMP\test.txt -mcg 224.2.2.3
 // multicastsender -p 8888 -f /Users/admin/Documents/TEST/test.txt -mcg 224.2.2.3
-
+// multicastsender -p 8888 -f /Users/norman/TEMP/test.txt -mcg 224.2.2.3
     public static void main(String[] args) {
 
         byte[] outBuf;
