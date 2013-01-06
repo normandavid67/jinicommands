@@ -5,7 +5,6 @@ import java.math.BigInteger;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
@@ -146,12 +145,13 @@ public class MulticastSender extends JiniCmd {
 
         final int PORT = this.getPort();
         String mcastGroup = this.getMulticastGroup();
+
+        String fl = this.getFile();
         String fileName = this.getFile();
 
         // initial Data
         String msg = this.getFileContents(fileName);
         String mdfiveSum = this.checkFileMD5(fileName);
-
 
         try {
             DatagramSocket socket = new DatagramSocket();
