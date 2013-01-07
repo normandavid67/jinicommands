@@ -7,13 +7,16 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 import jinicommands.JiniCmd;
 import org.apache.commons.cli.*;
 
 public class MulticastSender extends JiniCmd {
 
+    int interval = 500;
     int port;
     String multicastGroup;
     String message;
@@ -21,6 +24,14 @@ public class MulticastSender extends JiniCmd {
     CommandLineParser jcParser = new BasicParser();
     Options jcOptions = new Options();
     private boolean done;
+
+    public int getInterval() {
+        return interval;
+    }
+
+    public void setInterval(int interval) {
+        this.interval = interval;
+    }
 
     public String getFile() {
         return file;
@@ -63,6 +74,7 @@ public class MulticastSender extends JiniCmd {
         Option Help = new Option("h", "help", false, "Show Help.");
         this.jcOptions.addOption(Help);
 
+        this.jcOptions.addOption(OptionBuilder.withLongOpt("interval").withDescription("Interval").hasArg(true).isRequired(false).create("i"));
         this.jcOptions.addOption(OptionBuilder.withLongOpt("port").withDescription("Port").hasArg(true).isRequired(false).create("p"));
         this.jcOptions.addOption(OptionBuilder.withLongOpt("multicastgroup").withDescription("With Details").hasArg(true).isRequired(false).create("mcg"));
         this.jcOptions.addOption(OptionBuilder.withLongOpt("file").withDescription("File to publish").hasArg(true).isRequired(false).create("f"));
@@ -81,6 +93,16 @@ public class MulticastSender extends JiniCmd {
             }
 
             if ((this.done == false) && (this.jcError == false)) {
+                if (jcCmd.hasOption("i")) {
+                    try {
+                        int i = Integer.parseInt(jcCmd.getOptionValue("i").trim());
+                        this.setInterval(i);
+                    } catch (Exception e) {
+                        this.setJcError(true);
+                        this.addErrorMessages("Error : Option defined for -i is not a number");
+                    }
+                }
+
                 if (jcCmd.hasOption("p")) {
                     try {
                         int p = Integer.parseInt(jcCmd.getOptionValue("p").trim());
@@ -115,19 +137,11 @@ public class MulticastSender extends JiniCmd {
 
                 if (this.jcError == false) {
 
-                    System.out.println("Port : " + this.getPort());
-                    System.out.println("getMulticastGroup : " + this.getMulticastGroup());
-                    System.out.println("Message : " + this.getMessage());
-                    System.out.println("File : " + this.getFile());
                     try {
                         this.startMulticastSender();
                     } catch (NoSuchAlgorithmException ex) {
-                        Logger.getLogger(MulticastSender.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    try {
-                        System.out.println(this.checkFileMD5(this.getFile()));
-                    } catch (NoSuchAlgorithmException ex) {
-                        Logger.getLogger(MulticastSender.class.getName()).log(Level.SEVERE, null, ex);
+                        this.setJcError(true);
+                        this.addErrorMessages("Error : " + ex);
                     }
 
 
@@ -143,6 +157,7 @@ public class MulticastSender extends JiniCmd {
     private void startMulticastSender() throws NoSuchAlgorithmException {
         byte[] outBuf;
 
+        final int INTERVAL = this.getInterval();
         final int PORT = this.getPort();
         String mcastGroup = this.getMulticastGroup();
 
@@ -158,6 +173,8 @@ public class MulticastSender extends JiniCmd {
             long counter = 0;
             while (true) {
 
+                // Every 10th broadcast the file is checked if it has changed (MD5). 
+                // If it has the new data is read and broadcasted
                 counter++;
                 if (counter == 10) {
                     if (mdfiveSum.equals(this.checkFileMD5(fileName)) == false) {
@@ -175,17 +192,35 @@ public class MulticastSender extends JiniCmd {
 
                 socket.send(outPacket);
 
-                System.out.println("Server sends : (" + counter + ") " + msg);
-                /*try {
-                    Thread.sleep(500);
+                System.out.println("Server sends : (" + this.getTimeStamp() + ") " + msg);
+                try {
+                    Thread.sleep(INTERVAL);
                 } catch (InterruptedException ie) {
-                }*/
+                    this.setJcError(true);
+                    this.addErrorMessages("Error : An error occured in the Sleep thread.");
+                }
             }
         } catch (IOException ioe) {
-            System.out.println(ioe);
-        }
+            /*
+             DatagramPacket is just a wrapper on a UDP based socket, so the usual UDP rules apply.
+             64 kilobytes is the theoretical maximum size of a complete IP datagram, but only 576 bytes are guaranteed to be routed. On any given network path, the link with the smallest Maximum Transmit Unit will determine the actual limit. (1500 bytes, less headers is the common maximum, but it is impossible to predict how many headers there will be so its safest to limit messages to around 1400 bytes.)
+             If you go over the MTU limit, IPv4 will automatically break the datagram up into fragments and reassemble them at the end, but only up to 64 kilobytes and only if all fragments make it through. If any fragment is lost, or if any device decides it doesn't like fragments, then the entire packet is lost.
+             As noted above, it is impossible to know in advance what the MTU of path will be. There are various algorithms for experimenting to find out, but many devices do not properly implement (or deliberately ignore) the necessary standards so it all comes down to trial and error. Or you can just guess 1400 bytes per message.
+             As for errors, if you try to send more bytes than the OS is configured to allow, you should get an EMSGSIZE error or its equivalent. If you send less than that but more than the network allows, the packet will just disappear.
+             */
 
+            this.setJcError(true);
+            this.addErrorMessages("Info : 64 kilobytes is the theoretical maximum size of a complete IP datagram");
+            this.addErrorMessages("Error : " + ioe);
+        }
     }
+
+    private String getTimeStamp() {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd_hh:mm:ss");
+        df.setTimeZone(TimeZone.getTimeZone("PST"));
+        return df.format(new Date());
+    }
+
 // multicastsender -p 8888 -f C:\TEMP\test.txt -mcg 224.2.2.3
 // multicastsender -p 8888 -f /Users/admin/Documents/TEST/test.txt -mcg 224.2.2.3
 // multicastsender -p 8888 -f /Users/norman/TEMP/test.txt -mcg 224.2.2.3
@@ -256,20 +291,6 @@ public class MulticastSender extends JiniCmd {
         return String.format("%1$032X", i);
     }
 
-//    private void checkFileMD5() throws NoSuchAlgorithmException, FileNotFoundException, IOException {
-//        System.out.println("In ...checkFileMD5");
-//        MessageDigest md = MessageDigest.getInstance("MD5");
-//        InputStream is = new FileInputStream("/Users/norman/TEMP/test.txt");
-//        try {
-//            is = new DigestInputStream(is, md);
-//            // read stream to EOF as normal...
-//
-//        } finally {
-//            is.close();
-//        }
-//        byte[] digest = md.digest();
-//        System.out.println(digest.toString());
-//    }
     private void printHelp() {
     }
 }
