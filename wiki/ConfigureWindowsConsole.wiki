@@ -1,0 +1,12 @@
+#Configure Windows Console
+
+= Introduction =
+
+Configure Windows Console
+
+
+= How to Configure your Windows Cocsole Window =
+
+Steps :
+  * Open a Terminal Window
+  * <img src="http://jinicommands.googlecode.com/files/ConfigureWindowsConsole.jpg"/>
