@@ -5,7 +5,7 @@
 Configure Windows Console
 
 
-= How to Configure your Windows Cocsole Window =
+= How to Configure your Windows Console Window =
 
 Steps :
   * Open a Terminal Window
