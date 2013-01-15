@@ -26,6 +26,7 @@ public class MulticastSender extends JiniCmd {
     Options jcOptions = new Options();
     private boolean done;
     private boolean running = true;
+    boolean logDatagramMessages = false;
 
     int getInterval() {
         return interval;
@@ -80,6 +81,7 @@ public class MulticastSender extends JiniCmd {
         this.jcOptions.addOption(OptionBuilder.withLongOpt("port").withDescription("Port").hasArg(true).isRequired(false).create("p"));
         this.jcOptions.addOption(OptionBuilder.withLongOpt("multicastgroup").withDescription("With Details").hasArg(true).isRequired(false).create("mcg"));
         this.jcOptions.addOption(OptionBuilder.withLongOpt("file").withDescription("File to publish").hasArg(true).isRequired(false).create("f"));
+        this.jcOptions.addOption(OptionBuilder.withLongOpt("log").withDescription("Log Datagram Messages to Temp Directory").hasArg(false).isRequired(false).create("l"));
     }
 
     @Override
@@ -93,6 +95,11 @@ public class MulticastSender extends JiniCmd {
             if (jcCmd.hasOption('h')) {
                 printHelp();
             }
+
+            if (jcCmd.hasOption('l')) {
+                logDatagramMessages = true;
+            }
+
 
             if ((this.done == false) && (this.jcError == false)) {
                 if (jcCmd.hasOption("i")) {
@@ -145,8 +152,6 @@ public class MulticastSender extends JiniCmd {
                         this.setJcError(true);
                         this.addErrorMessages("Error : " + ex);
                     }
-
-
                 }
             }
 
@@ -157,6 +162,8 @@ public class MulticastSender extends JiniCmd {
     }
 
     private void startMulticastSender() throws NoSuchAlgorithmException {
+
+
         byte[] outBuf;
 
         final int INTERVAL = this.getInterval();
@@ -169,8 +176,8 @@ public class MulticastSender extends JiniCmd {
         // initial Data
         String msg = this.getFileContents(fileName);
         String mdfiveSum = this.checkFileMD5(fileName);
-       
-         JiniCommandsLogger jcl = new JiniCommandsLogger();
+
+        JiniCommandsLogger jcl = new JiniCommandsLogger();
 
 
 
@@ -198,9 +205,12 @@ public class MulticastSender extends JiniCmd {
 
                 socket.send(outPacket);
 
-                jcl.writeLog(msg);
-                
-                
+
+                if (logDatagramMessages == true) {
+                    jcl.writeLog(msg);
+                }
+
+
                 try {
                     Thread.sleep(INTERVAL);
                 } catch (InterruptedException ie) {
@@ -227,8 +237,6 @@ public class MulticastSender extends JiniCmd {
         }
     }
 
-    
-
     private String getTimeStamp() {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd_hh:mm:ss");
         df.setTimeZone(TimeZone.getTimeZone("PST"));
@@ -243,8 +251,6 @@ public class MulticastSender extends JiniCmd {
     private String getOsSpecificTempDirectory() {
         return System.getProperty("java.io.tmpdir");
     }
-
-
 
     private String getFileContents(String FileName) {
         StringBuilder resStr = new StringBuilder();
@@ -280,9 +286,8 @@ public class MulticastSender extends JiniCmd {
     }
 
     private void printHelp() {
-        
     }
-    
+
     // multicastsender -p 8888 -f C:\TEMP\test.txt -mcg 224.2.2.3
 // multicastsender -p 8888 -f /Users/admin/Documents/TEST/test.txt -mcg 224.2.2.3
 // multicastsender -p 8888 -f /Users/norman/TEMP/test.txt -mcg 224.2.2.3
@@ -319,6 +324,4 @@ public class MulticastSender extends JiniCmd {
             System.out.println(ioe);
         }
     }
-    
-   
 }
