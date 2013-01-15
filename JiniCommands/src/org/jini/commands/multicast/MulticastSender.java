@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.TimeZone;
 import jinicommands.JiniCmd;
 import org.apache.commons.cli.*;
+import org.jini.commands.helper.JiniCommandsLogger;
 
 public class MulticastSender extends JiniCmd {
 
@@ -24,20 +25,21 @@ public class MulticastSender extends JiniCmd {
     CommandLineParser jcParser = new BasicParser();
     Options jcOptions = new Options();
     private boolean done;
+    private boolean running = true;
 
-    public int getInterval() {
+    int getInterval() {
         return interval;
     }
 
-    public void setInterval(int interval) {
+    void setInterval(int interval) {
         this.interval = interval;
     }
 
-    public String getFile() {
+    String getFile() {
         return file;
     }
 
-    public void setFile(String file) {
+    void setFile(String file) {
         this.file = file;
     }
 
@@ -45,23 +47,23 @@ public class MulticastSender extends JiniCmd {
         return message;
     }
 
-    public void setMessage(String message) {
+    void setMessage(String message) {
         this.message = message;
     }
 
-    public String getMulticastGroup() {
+    String getMulticastGroup() {
         return multicastGroup;
     }
 
-    public void setMulticastGroup(String multicastGroup) {
+    void setMulticastGroup(String multicastGroup) {
         this.multicastGroup = multicastGroup;
     }
 
-    public int getPort() {
+    int getPort() {
         return port;
     }
 
-    public void setPort(int port) {
+    void setPort(int port) {
         this.port = port;
     }
 
@@ -167,12 +169,17 @@ public class MulticastSender extends JiniCmd {
         // initial Data
         String msg = this.getFileContents(fileName);
         String mdfiveSum = this.checkFileMD5(fileName);
+       
+         JiniCommandsLogger jcl = new JiniCommandsLogger();
+
+
 
         try {
             DatagramSocket socket = new DatagramSocket();
             long counter = 0;
-            while (true) {
 
+
+            while (this.running) {
                 // Every 10th broadcast the file is checked if it has changed (MD5). 
                 // If it has the new data is read and broadcasted
                 counter++;
@@ -183,7 +190,6 @@ public class MulticastSender extends JiniCmd {
                     counter = 0;
                 }
 
-
                 outBuf = msg.getBytes();
 
                 //Send to multicast IP address and port
@@ -192,13 +198,19 @@ public class MulticastSender extends JiniCmd {
 
                 socket.send(outPacket);
 
-                System.out.println("Server sends : (" + this.getTimeStamp() + ") " + msg);
+                jcl.writeLog(msg);
+                
+                
                 try {
                     Thread.sleep(INTERVAL);
                 } catch (InterruptedException ie) {
                     this.setJcError(true);
                     this.addErrorMessages("Error : An error occured in the Sleep thread.");
                 }
+
+
+
+
             }
         } catch (IOException ioe) {
             /*
@@ -210,10 +222,12 @@ public class MulticastSender extends JiniCmd {
              */
 
             this.setJcError(true);
-            this.addErrorMessages("Info : 64 kilobytes is the theoretical maximum size of a complete IP datagram");
+            this.addErrorMessages("Info : 64 kilobytes is the theoretical maximum size of a complete IP Datagram");
             this.addErrorMessages("Error : " + ioe);
         }
     }
+
+    
 
     private String getTimeStamp() {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd_hh:mm:ss");
@@ -221,42 +235,16 @@ public class MulticastSender extends JiniCmd {
         return df.format(new Date());
     }
 
-// multicastsender -p 8888 -f C:\TEMP\test.txt -mcg 224.2.2.3
-// multicastsender -p 8888 -f /Users/admin/Documents/TEST/test.txt -mcg 224.2.2.3
-// multicastsender -p 8888 -f /Users/norman/TEMP/test.txt -mcg 224.2.2.3
-    public static void main(String[] args) {
-
-        byte[] outBuf;
-        final int PORT = 8888;
-        String msg;
-        try {
-            DatagramSocket socket = new DatagramSocket();
-            long counter = 0;
-
-
-            while (true) {
-                String rs = RandomString.randomstring();
-
-                msg = "This is multicast! " + counter + " " + rs;
-                counter++;
-                outBuf = msg.getBytes();
-
-                //Send to multicast IP address and port
-                InetAddress address = InetAddress.getByName("224.2.2.3");
-                DatagramPacket outPacket = new DatagramPacket(outBuf, outBuf.length, address, PORT);
-
-                socket.send(outPacket);
-
-                System.out.println("Server sends : " + msg);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ie) {
-                }
-            }
-        } catch (IOException ioe) {
-            System.out.println(ioe);
-        }
+    /**
+     * Getter method for OS specific temporary file
+     *
+     * @return
+     */
+    private String getOsSpecificTempDirectory() {
+        return System.getProperty("java.io.tmpdir");
     }
+
+
 
     private String getFileContents(String FileName) {
         StringBuilder resStr = new StringBuilder();
@@ -292,5 +280,45 @@ public class MulticastSender extends JiniCmd {
     }
 
     private void printHelp() {
+        
     }
+    
+    // multicastsender -p 8888 -f C:\TEMP\test.txt -mcg 224.2.2.3
+// multicastsender -p 8888 -f /Users/admin/Documents/TEST/test.txt -mcg 224.2.2.3
+// multicastsender -p 8888 -f /Users/norman/TEMP/test.txt -mcg 224.2.2.3
+    public static void main(String[] args) {
+
+        byte[] outBuf;
+        final int PORT = 8888;
+        String msg;
+        try {
+            DatagramSocket socket = new DatagramSocket();
+            long counter = 0;
+
+
+            while (true) {
+                String rs = RandomString.randomstring();
+
+                msg = "This is multicast! " + counter + " " + rs;
+                counter++;
+                outBuf = msg.getBytes();
+
+                //Send to multicast IP address and port
+                InetAddress address = InetAddress.getByName("224.2.2.3");
+                DatagramPacket outPacket = new DatagramPacket(outBuf, outBuf.length, address, PORT);
+
+                socket.send(outPacket);
+
+                System.out.println("Server sends : " + msg);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ie) {
+                }
+            }
+        } catch (IOException ioe) {
+            System.out.println(ioe);
+        }
+    }
+    
+   
 }
