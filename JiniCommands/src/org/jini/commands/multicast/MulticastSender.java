@@ -10,10 +10,12 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Scanner;
 import java.util.TimeZone;
 import jinicommands.JiniCmd;
 import org.apache.commons.cli.*;
 import org.jini.commands.helper.JiniCommandsLogger;
+import org.jini.commands.utils.PrintChar;
 
 public class MulticastSender extends JiniCmd {
 
@@ -179,9 +181,24 @@ public class MulticastSender extends JiniCmd {
 
         JiniCommandsLogger jcl = new JiniCommandsLogger();
 
+        System.out.println("Started Multicast Sender. Sending Datagram every : " + INTERVAL + " Miliseconds");
+        if (logDatagramMessages == true) {
+            System.out.println("Logging to Directory : " + jcl.getJiniLogDir());
+        } else {
+            System.out.println("Logging not turned on, add -l to start logging. ");
+
+        }
+        System.out.println("'c + ENTER' or 'x + ENTER' to stop Multicast Sender.");
+        
+        PrintChar printChar = new PrintChar();
+        printChar.setOutPutChar("->");
 
 
         try {
+            Scanner in = new Scanner(System.in);
+            
+            printChar.start();
+
             DatagramSocket socket = new DatagramSocket();
             long counter = 0;
 
@@ -205,24 +222,25 @@ public class MulticastSender extends JiniCmd {
 
                 socket.send(outPacket);
 
-
                 if (logDatagramMessages == true) {
                     jcl.writeLog(msg);
+                }
+
+                if ((in.nextLine().equalsIgnoreCase("c")) || (in.nextLine().equalsIgnoreCase("x"))) {
+                    this.running = false;
                 }
 
 
                 try {
                     Thread.sleep(INTERVAL);
                 } catch (InterruptedException ie) {
+                    printChar.setStopPrinting(true);
                     this.setJcError(true);
                     this.addErrorMessages("Error : An error occured in the Sleep thread.");
                 }
-
-
-
-
             }
         } catch (IOException ioe) {
+            printChar.setStopPrinting(true);
             /*
              DatagramPacket is just a wrapper on a UDP based socket, so the usual UDP rules apply.
              64 kilobytes is the theoretical maximum size of a complete IP datagram, but only 576 bytes are guaranteed to be routed. On any given network path, the link with the smallest Maximum Transmit Unit will determine the actual limit. (1500 bytes, less headers is the common maximum, but it is impossible to predict how many headers there will be so its safest to limit messages to around 1400 bytes.)
@@ -235,6 +253,7 @@ public class MulticastSender extends JiniCmd {
             this.addErrorMessages("Info : 64 kilobytes is the theoretical maximum size of a complete IP Datagram");
             this.addErrorMessages("Error : " + ioe);
         }
+        printChar.setStopPrinting(true);
     }
 
     private String getTimeStamp() {
@@ -287,8 +306,8 @@ public class MulticastSender extends JiniCmd {
 
     private void printHelp() {
     }
-
-    // multicastsender -p 8888 -f C:\TEMP\test.txt -mcg 224.2.2.3
+ 
+    // multicastsender -p 8888 -f C:\TEMP\test.txt -mcg 224.2.2.3 -l
 // multicastsender -p 8888 -f /Users/admin/Documents/TEST/test.txt -mcg 224.2.2.3
 // multicastsender -p 8888 -f /Users/norman/TEMP/test.txt -mcg 224.2.2.3
     public static void main(String[] args) {
