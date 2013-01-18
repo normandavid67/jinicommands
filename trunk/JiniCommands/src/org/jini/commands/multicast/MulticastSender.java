@@ -1,3 +1,33 @@
+/*
+ New BSD License
+ Copyright (c) 2012, Norman David <normandavid67@gmail.com>
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+ * Redistributions of source code must retain the above copyright
+ notice, this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright
+ notice, this list of conditions and the following disclaimer in the
+ documentation and/or other materials provided with the distribution.
+ * Neither the name of the <organization> nor the
+ names of its contributors may be used to endorse or promote products
+ derived from this software without specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL Norman David BE LIABLE FOR ANY
+ DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+  
+ For a copy of the License type 'license'
+ */
 package org.jini.commands.multicast;
 
 import java.io.*;
@@ -7,18 +37,25 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Scanner;
-import java.util.TimeZone;
 import jinicommands.JiniCmd;
 import org.apache.commons.cli.*;
 import org.jini.commands.helper.JiniCommandsLogger;
+import org.jini.commands.helper.TablePrinter;
 import org.jini.commands.utils.PrintChar;
 
 public class MulticastSender extends JiniCmd {
 
+    /**
+     * MultiCast Sender. Reads data from a file and Sends DatagramPackets via
+     * Multicast at regular intervals. DatagramPacket cannot be more than 64
+     * Kilobytes large. If the Data Source File changes. The new data will be
+     * broadcasted. Default Intervals = 500 MiliSeconds
+     *
+     * @author Norman David <normandavid67@gmail.com>
+     * @since JiniCommands version 0.2
+     * @version 1.0
+     */
     int interval = 500;
     int port;
     String multicastGroup;
@@ -30,18 +67,40 @@ public class MulticastSender extends JiniCmd {
     private boolean running = true;
     boolean logDatagramMessages = false;
 
+    /**
+     * Getter method for the Time interval between each Multicast. Defined in
+     * MiliSeconds
+     *
+     * @return
+     */
     int getInterval() {
         return interval;
     }
 
+    /**
+     * Setter method for the Time interval between each Multicast. Defined in
+     * MiliSeconds
+     *
+     * @param interval
+     */
     void setInterval(int interval) {
         this.interval = interval;
     }
 
+    /**
+     * Getter for the Data File name
+     *
+     * @return
+     */
     String getFile() {
         return file;
     }
 
+    /**
+     * Setter for the Data File name
+     *
+     * @param file
+     */
     void setFile(String file) {
         this.file = file;
     }
@@ -50,22 +109,47 @@ public class MulticastSender extends JiniCmd {
         return message;
     }
 
+    /**
+     * Setter for the Message which will be MultiCasted.
+     *
+     * @param message
+     */
     void setMessage(String message) {
         this.message = message;
     }
 
+    /**
+     * Getter for MultiCast Group
+     *
+     * @return
+     */
     String getMulticastGroup() {
         return multicastGroup;
     }
 
+    /**
+     * Setter for MultiCast Group
+     *
+     * @param multicastGroup
+     */
     void setMulticastGroup(String multicastGroup) {
         this.multicastGroup = multicastGroup;
     }
 
+    /**
+     * Getter for Port Number
+     *
+     * @return
+     */
     int getPort() {
         return port;
     }
 
+    /**
+     * Setter for Port Number
+     *
+     * @param port
+     */
     void setPort(int port) {
         this.port = port;
     }
@@ -73,6 +157,9 @@ public class MulticastSender extends JiniCmd {
     public MulticastSender() {
     }
 
+    /**
+     * In this method all the Command specific Command Line options are defined.
+     */
     @Override
     @SuppressWarnings("static-access")
     public void setJCLIOptions() {
@@ -80,12 +167,15 @@ public class MulticastSender extends JiniCmd {
         this.jcOptions.addOption(Help);
 
         this.jcOptions.addOption(OptionBuilder.withLongOpt("interval").withDescription("Interval").hasArg(true).isRequired(false).create("i"));
-        this.jcOptions.addOption(OptionBuilder.withLongOpt("port").withDescription("Port").hasArg(true).isRequired(false).create("p"));
-        this.jcOptions.addOption(OptionBuilder.withLongOpt("multicastgroup").withDescription("With Details").hasArg(true).isRequired(false).create("mcg"));
-        this.jcOptions.addOption(OptionBuilder.withLongOpt("file").withDescription("File to publish").hasArg(true).isRequired(false).create("f"));
+        /*Needed*/ this.jcOptions.addOption(OptionBuilder.withLongOpt("port").withDescription("Port").hasArg(true).isRequired(false).create("p"));
+        /*Needed*/ this.jcOptions.addOption(OptionBuilder.withLongOpt("multicastgroup").withDescription("With Details").hasArg(true).isRequired(false).create("mcg"));
+        /*Needed*/ this.jcOptions.addOption(OptionBuilder.withLongOpt("file").withDescription("File to publish").hasArg(true).isRequired(false).create("f"));
         this.jcOptions.addOption(OptionBuilder.withLongOpt("log").withDescription("Log Datagram Messages to Temp Directory").hasArg(false).isRequired(false).create("l"));
     }
 
+    /**
+     * In this method all the execution of the specific Command takes place
+     */
     @Override
     @SuppressWarnings("static-access")
     public void executeCommand() {
@@ -94,19 +184,25 @@ public class MulticastSender extends JiniCmd {
         String args[] = this.convertToArray();
         try {
             CommandLine jcCmd = this.jcParser.parse(this.jcOptions, args);
+            // Read the -h option
             if (jcCmd.hasOption('h')) {
+                // Print help 
                 printHelp();
             }
 
+            // Reaf the -l option 
             if (jcCmd.hasOption('l')) {
+                // Set the flag
                 logDatagramMessages = true;
             }
 
 
             if ((this.done == false) && (this.jcError == false)) {
+                // Read the -i option. Defines the interval between 2 Multicasts
                 if (jcCmd.hasOption("i")) {
                     try {
                         int i = Integer.parseInt(jcCmd.getOptionValue("i").trim());
+                        //Set the interval
                         this.setInterval(i);
                     } catch (Exception e) {
                         this.setJcError(true);
@@ -114,41 +210,57 @@ public class MulticastSender extends JiniCmd {
                     }
                 }
 
+                // Read the -p option. Defines the port
                 if (jcCmd.hasOption("p")) {
                     try {
                         int p = Integer.parseInt(jcCmd.getOptionValue("p").trim());
+                        // Set port
                         this.setPort(p);
                     } catch (Exception e) {
                         this.setJcError(true);
                         this.addErrorMessages("Error : Option defined for -p is not a number");
                     }
+                } else {
+                    this.setJcError(true);
+                    this.addErrorMessages("Error : Please define a Option defined for -p");
+
                 }
 
+                // Read -mcg option. MultiCast Group
                 if (jcCmd.hasOption("mcg")) {
                     if (jcCmd.getOptionValue("p").length() > 0) {
+                        // Set the MultiCast Group
                         this.setMulticastGroup(jcCmd.getOptionValue("mcg").trim());
                     } else {
                         this.setJcError(true);
                         this.addErrorMessages("Error : Please define a Option defined for -mcg");
                     }
+                } else {
+                    this.setJcError(true);
+                    this.addErrorMessages("Error : Please define a Option defined for -mcg");
                 }
 
+                // Read the -f option. Absolute Path to File
                 if (jcCmd.hasOption("f")) {
                     String fle = jcCmd.getOptionValue("f").trim();
 
                     if (fle.length() > 0) {
                         if (this.isFileCanRead(fle)) {
+                            // Set the File 
                             this.setFile(fle.trim());
                         } else {
                             this.setJcError(true);
                             this.addErrorMessages("Error : File does not exsist or is unreadable. " + fle);
                         }
                     }
+                } else {
+                    this.setJcError(true);
+                    this.addErrorMessages("Error : Please define a Option defined for -f");
                 }
 
                 if (this.jcError == false) {
-
                     try {
+                        // Start Multicast Sender
                         this.startMulticastSender();
                     } catch (NoSuchAlgorithmException ex) {
                         this.setJcError(true);
@@ -156,7 +268,6 @@ public class MulticastSender extends JiniCmd {
                     }
                 }
             }
-
         } catch (org.apache.commons.cli.ParseException ex) {
             this.setJcError(true);
             this.addErrorMessages("Error : " + ex.getMessage());
@@ -164,21 +275,24 @@ public class MulticastSender extends JiniCmd {
     }
 
     private void startMulticastSender() throws NoSuchAlgorithmException {
-
-
         byte[] outBuf;
-
+        // Interval in MiliSeconds
         final int INTERVAL = this.getInterval();
+        // Port 
         final int PORT = this.getPort();
+        // Multicast Group
         String mcastGroup = this.getMulticastGroup();
+
 
         String fl = this.getFile();
         String fileName = this.getFile();
 
-        // initial Data
+        // Read Data from File
         String msg = this.getFileContents(fileName);
+        // MD5 CheckSum
         String mdfiveSum = this.checkFileMD5(fileName);
 
+        // Jini Logging
         JiniCommandsLogger jcl = new JiniCommandsLogger();
 
         System.out.println("Started Multicast Sender. Sending Datagram every : " + INTERVAL + " Miliseconds");
@@ -189,14 +303,14 @@ public class MulticastSender extends JiniCmd {
 
         }
         System.out.println("'c + ENTER' or 'x + ENTER' to stop Multicast Sender.");
-        
+
         PrintChar printChar = new PrintChar();
         printChar.setOutPutChar(">");
 
 
         try {
             Scanner in = new Scanner(System.in);
-            
+
             printChar.start();
 
             DatagramSocket socket = new DatagramSocket();
@@ -253,24 +367,17 @@ public class MulticastSender extends JiniCmd {
             this.addErrorMessages("Info : 64 kilobytes is the theoretical maximum size of a complete IP Datagram");
             this.addErrorMessages("Error : " + ioe);
         }
-        printChar.setStopPrinting(true);
-    }
 
-    private String getTimeStamp() {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd_hh:mm:ss");
-        df.setTimeZone(TimeZone.getTimeZone("PST"));
-        return df.format(new Date());
+        printChar.setStopPrinting(true);
+        this.done = true;
     }
 
     /**
-     * Getter method for OS specific temporary file
+     * Read File Contents
      *
+     * @param FileName
      * @return
      */
-    private String getOsSpecificTempDirectory() {
-        return System.getProperty("java.io.tmpdir");
-    }
-
     private String getFileContents(String FileName) {
         StringBuilder resStr = new StringBuilder();
         try {
@@ -287,6 +394,12 @@ public class MulticastSender extends JiniCmd {
         return resStr.toString();
     }
 
+    /**
+     * Check if File is Readable
+     *
+     * @param path
+     * @return
+     */
     private boolean isFileCanRead(String path) {
         File f = new File(path);
         if ((f.isFile()) && (f.canRead())) {
@@ -295,6 +408,13 @@ public class MulticastSender extends JiniCmd {
         return false;
     }
 
+    /**
+     * Get the MD5 CheckSum
+     *
+     * @param file
+     * @return
+     * @throws NoSuchAlgorithmException
+     */
     public String checkFileMD5(String file) throws NoSuchAlgorithmException {
         String pass = this.getFileContents(file);
         MessageDigest m = MessageDigest.getInstance("MD5");
@@ -304,14 +424,34 @@ public class MulticastSender extends JiniCmd {
         return String.format("%1$032X", i);
     }
 
+    private String getOsSpecificTempDirectory() {
+        return System.getProperty("java.io.tmpdir");
+    }
+
     private void printHelp() {
+        TablePrinter helpTableHead = new TablePrinter("Command Name : ", "multicastsender");
+        helpTableHead.addRow("SYNOPSIS : ", "multicastsender [OPTION]...");
+        helpTableHead.addRow("DESCRIPTION : ", "Start a MultiCast Sender. Data is read from a File and send Multicast DatagramPacket.");
+        helpTableHead.addRow(" ", "");
+        helpTableHead.addRow(" ", "Important : 64 kilobytes is the theoretical maximum size of a complete IP datagram.");
+        helpTableHead.addRow(" ", "");
+        helpTableHead.addRow(" ", "Note : There must be enough space in the temporary directory of your OS. ");
+        helpTableHead.addRow(" ", "The Logs are written in the temporary Directory.");
+        helpTableHead.addRow(" ", "Temp Directory of your OS : " + this.getOsSpecificTempDirectory());
+        helpTableHead.print();
+        TablePrinter helpTable = new TablePrinter("Short Opt", "Long Opt", "Argument", "Desc", "Short Option Example", "Long Option Example");
+        helpTable.addRow("-h", "--help", "not required", "Show this help.", "multicastsender -h", "multicastsender --help");
+        helpTable.addRow("-i", "--interval", " required", "Inetrval in Miliseconds. Default = 500 Miliseconds", "multicastsender -i 1000 ", "multicastsender --interval 1000");
+        helpTable.print();
+
+
+        this.done = true;
     }
     // Win
     // multicastsender -p 8888 -f C:\TEMP\test.txt -mcg 224.2.2.3 -l
-    
+
     // Air
     // multicastsender -p 8888 -f /Users/admin/Documents/TEST/test.txt -mcg 224.2.2.3
-    
     // Mac Desktop
     // multicastsender -p 8888 -f /Users/norman/TEMP/test.txt -mcg 224.2.2.3
     public static void main(String[] args) {
