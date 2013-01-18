@@ -62,7 +62,7 @@ public class JiniCommands {
     boolean cmdFound = false;
     static double minJVM = 1.6;
     static String prompt = "JiniCommands>";
-    static String jiniVersion = "0.1";
+    static String jiniVersion = "0.2";
 
     /**
      * Setter method for the user input and to sart executing the command
