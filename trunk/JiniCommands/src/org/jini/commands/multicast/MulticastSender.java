@@ -191,7 +191,7 @@ public class MulticastSender extends JiniCmd {
         System.out.println("'c + ENTER' or 'x + ENTER' to stop Multicast Sender.");
         
         PrintChar printChar = new PrintChar();
-        printChar.setOutPutChar("->");
+        printChar.setOutPutChar(">");
 
 
         try {
@@ -306,10 +306,14 @@ public class MulticastSender extends JiniCmd {
 
     private void printHelp() {
     }
- 
+    // Win
     // multicastsender -p 8888 -f C:\TEMP\test.txt -mcg 224.2.2.3 -l
-// multicastsender -p 8888 -f /Users/admin/Documents/TEST/test.txt -mcg 224.2.2.3
-// multicastsender -p 8888 -f /Users/norman/TEMP/test.txt -mcg 224.2.2.3
+    
+    // Air
+    // multicastsender -p 8888 -f /Users/admin/Documents/TEST/test.txt -mcg 224.2.2.3
+    
+    // Mac Desktop
+    // multicastsender -p 8888 -f /Users/norman/TEMP/test.txt -mcg 224.2.2.3
     public static void main(String[] args) {
 
         byte[] outBuf;
