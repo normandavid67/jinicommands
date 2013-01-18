@@ -35,7 +35,7 @@ public class JiniCommandsLogger {
         JiniCommandsLogger.append = append;
     }
 
-    private String getJiniLogDir() {
+    public String getJiniLogDir() {
         return this.getOsSpecificTempDirectory() + "JiniCommandsLog";
     }
 
