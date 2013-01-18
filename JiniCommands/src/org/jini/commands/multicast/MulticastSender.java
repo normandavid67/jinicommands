@@ -441,13 +441,25 @@ public class MulticastSender extends JiniCmd {
         helpTableHead.print();
         TablePrinter helpTable = new TablePrinter("Short Opt", "Long Opt", "Argument", "Desc", "Short Option Example", "Long Option Example");
         helpTable.addRow("-h", "--help", "not required", "Show this help.", "multicastsender -h", "multicastsender --help");
-        helpTable.addRow("-i", "--interval", " required", "Interval in Miliseconds. Default = 500 Miliseconds", "multicastsender -i 1000 ", "multicastsender --interval 1000");
-        helpTable.addRow("-p", "--port", " required", "Port to which the Multicast traffic is published", "multicastsender -p 8080 ", "multicastsender --port 8080");
-        helpTable.addRow("-f", "--file", " required", "File which contains the data (Must be Readable)", "multicastsender -f /PATH/TO/FILE ", "multicastsender --file /PATH/TO/FILE");
+        helpTable.addRow("-i", "--interval", "required", "Interval in Miliseconds. Default = 500 Miliseconds", "multicastsender -i 1000 ", "multicastsender --interval 1000");
+        helpTable.addRow("-p", "--port", "required", "Port to which the Multicast traffic is published", "multicastsender -p 8080 ", "multicastsender --port 8080");
+        helpTable.addRow("-f", "--file", "required", "File which contains the data (Must be Readable)", "multicastsender -f /PATH/TO/FILE ", "multicastsender --file /PATH/TO/FILE");
         helpTable.addRow("", "", " ", "'multicastsender' checks every 11th multicast if contents of file have varied.", "", "");
         helpTable.addRow("-mcg", "--multicastgroup", " required", "Multicast Group to join", "multicastsender -mcg 224.2.2.3", "multicastsender --multicastgroup 224.2.2.3");
+        helpTable.addRow("-l", "--log", "not required", "Log Messages to Temp Directory", "multicastsender -l", "multicastsender --log");
+        helpTable.addRow("", "", "", "", "", "");
+        helpTable.addRow("", "", "", "", "", "");
         helpTable.print();
 
+        
+        
+        TablePrinter helpTableFoot= new TablePrinter("Example :");
+        helpTableFoot.addRow("multicastsender --port 8888 --file /FULL/PATH/TO/FILE.txt --multicastgroup 224.2.2.3");
+        
+        helpTableFoot.print();
+        
+        
+        
 
         this.done = true;
     }
