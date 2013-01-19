@@ -357,10 +357,19 @@ public class MulticastSender extends JiniCmd {
             printChar.setStopPrinting(true);
             /*
              DatagramPacket is just a wrapper on a UDP based socket, so the usual UDP rules apply.
-             64 kilobytes is the theoretical maximum size of a complete IP datagram, but only 576 bytes are guaranteed to be routed. On any given network path, the link with the smallest Maximum Transmit Unit will determine the actual limit. (1500 bytes, less headers is the common maximum, but it is impossible to predict how many headers there will be so its safest to limit messages to around 1400 bytes.)
-             If you go over the MTU limit, IPv4 will automatically break the datagram up into fragments and reassemble them at the end, but only up to 64 kilobytes and only if all fragments make it through. If any fragment is lost, or if any device decides it doesn't like fragments, then the entire packet is lost.
-             As noted above, it is impossible to know in advance what the MTU of path will be. There are various algorithms for experimenting to find out, but many devices do not properly implement (or deliberately ignore) the necessary standards so it all comes down to trial and error. Or you can just guess 1400 bytes per message.
-             As for errors, if you try to send more bytes than the OS is configured to allow, you should get an EMSGSIZE error or its equivalent. If you send less than that but more than the network allows, the packet will just disappear.
+             64 kilobytes is the theoretical maximum size of a complete IP datagram, but only 576 bytes are guaranteed to be routed. 
+             On any given network path, the link with the smallest Maximum Transmit Unit will determine the actual limit. (1500 bytes,
+             less headers is the common maximum, but it is impossible to predict how many headers there will be so its safest to limit 
+             messages to around 1400 bytes.)
+             If you go over the MTU limit, IPv4 will automatically break the datagram up into fragments and reassemble them at the end, 
+             but only up to 64 kilobytes and only if all fragments make it through. If any fragment is lost, or if any device decides 
+             it doesn't like fragments, then the entire packet is lost.
+             
+             As noted above, it is impossible to know in advance what the MTU of path will be. There are various algorithms for experimenting 
+             to find out, but many devices do not properly implement (or deliberately ignore) the necessary standards so it all comes down to 
+             trial and error. Or you can just guess 1400 bytes per message.
+             As for errors, if you try to send more bytes than the OS is configured to allow, you should get an EMSGSIZE error or its equivalent.
+             If you send less than that but more than the network allows, the packet will just disappear.
              */
 
             this.setJcError(true);
@@ -432,11 +441,12 @@ public class MulticastSender extends JiniCmd {
         TablePrinter helpTableHead = new TablePrinter("Command Name : ", "multicastsender");
         helpTableHead.addRow("SYNOPSIS : ", "multicastsender [OPTION]...");
         helpTableHead.addRow("DESCRIPTION : ", "Start a MultiCast Sender. Data is read from a File and send Multicast DatagramPacket.");
+        helpTableHead.addRow(" ", "'multicastsender' checks every 11th multicast if contents of file have varied.");
         helpTableHead.addRow(" ", "");
         helpTableHead.addRow(" ", "Important : 64 kilobytes is the theoretical maximum size of a complete IP datagram.");
         helpTableHead.addRow(" ", "");
         helpTableHead.addRow(" ", "Note : There must be enough space in the temporary directory of your OS. ");
-        helpTableHead.addRow(" ", "The Logs are written in the temporary Directory.");
+        helpTableHead.addRow(" ", "The Logs are written in Directory 'JiniCommandsLog' of the OS Specific Temporary Directory.");
         helpTableHead.addRow(" ", "Temp Directory of your OS : " + this.getOsSpecificTempDirectory());
         helpTableHead.print();
         TablePrinter helpTable = new TablePrinter("Short Opt", "Long Opt", "Argument", "Desc", "Short Option Example", "Long Option Example");
@@ -444,11 +454,9 @@ public class MulticastSender extends JiniCmd {
         helpTable.addRow("-i", "--interval", "required", "Interval in Miliseconds. Default = 500 Miliseconds", "multicastsender -i 1000 ", "multicastsender --interval 1000");
         helpTable.addRow("-p", "--port", "required", "Port to which the Multicast traffic is published", "multicastsender -p 8080 ", "multicastsender --port 8080");
         helpTable.addRow("-f", "--file", "required", "File which contains the data (Must be Readable)", "multicastsender -f /PATH/TO/FILE ", "multicastsender --file /PATH/TO/FILE");
-        helpTable.addRow("", "", " ", "'multicastsender' checks every 11th multicast if contents of file have varied.", "", "");
-        helpTable.addRow("-mcg", "--multicastgroup", " required", "Multicast Group to join", "multicastsender -mcg 224.2.2.3", "multicastsender --multicastgroup 224.2.2.3");
+        helpTable.addRow("-mcg", "--multicastgroup", "required", "Multicast Group to join", "multicastsender -mcg 224.2.2.3", "multicastsender --multicastgroup 224.2.2.3");
         helpTable.addRow("-l", "--log", "not required", "Log Messages to Temp Directory", "multicastsender -l", "multicastsender --log");
-        helpTable.addRow("", "", "", "", "", "");
-        helpTable.addRow("", "", "", "", "", "");
+      
         helpTable.print();
 
         
@@ -457,9 +465,6 @@ public class MulticastSender extends JiniCmd {
         helpTableFoot.addRow("multicastsender --port 8888 --file /FULL/PATH/TO/FILE.txt --multicastgroup 224.2.2.3");
         
         helpTableFoot.print();
-        
-        
-        
 
         this.done = true;
     }
@@ -470,37 +475,4 @@ public class MulticastSender extends JiniCmd {
     // multicastsender -p 8888 -f /Users/admin/Documents/TEST/test.txt -mcg 224.2.2.3
     // Mac Desktop
     // multicastsender -p 8888 -f /Users/norman/TEMP/test.txt -mcg 224.2.2.3
-    public static void main(String[] args) {
-
-        byte[] outBuf;
-        final int PORT = 8888;
-        String msg;
-        try {
-            DatagramSocket socket = new DatagramSocket();
-            long counter = 0;
-
-
-            while (true) {
-                String rs = RandomString.randomstring();
-
-                msg = "This is multicast! " + counter + " " + rs;
-                counter++;
-                outBuf = msg.getBytes();
-
-                //Send to multicast IP address and port
-                InetAddress address = InetAddress.getByName("224.2.2.3");
-                DatagramPacket outPacket = new DatagramPacket(outBuf, outBuf.length, address, PORT);
-
-                socket.send(outPacket);
-
-                System.out.println("Server sends : " + msg);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ie) {
-                }
-            }
-        } catch (IOException ioe) {
-            System.out.println(ioe);
-        }
-    }
 }
