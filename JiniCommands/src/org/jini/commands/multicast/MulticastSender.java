@@ -167,9 +167,9 @@ public class MulticastSender extends JiniCmd {
         this.jcOptions.addOption(Help);
 
         this.jcOptions.addOption(OptionBuilder.withLongOpt("interval").withDescription("Interval").hasArg(true).isRequired(false).create("i"));
-        /*Needed*/ this.jcOptions.addOption(OptionBuilder.withLongOpt("port").withDescription("Port").hasArg(true).isRequired(false).create("p"));
-        /*Needed*/ this.jcOptions.addOption(OptionBuilder.withLongOpt("multicastgroup").withDescription("With Details").hasArg(true).isRequired(false).create("mcg"));
-        /*Needed*/ this.jcOptions.addOption(OptionBuilder.withLongOpt("file").withDescription("File to publish").hasArg(true).isRequired(false).create("f"));
+        this.jcOptions.addOption(OptionBuilder.withLongOpt("port").withDescription("Port").hasArg(true).isRequired(false).create("p"));
+        this.jcOptions.addOption(OptionBuilder.withLongOpt("multicastgroup").withDescription("With Details").hasArg(true).isRequired(false).create("mcg"));
+        this.jcOptions.addOption(OptionBuilder.withLongOpt("file").withDescription("File to publish").hasArg(true).isRequired(false).create("f"));
         this.jcOptions.addOption(OptionBuilder.withLongOpt("log").withDescription("Log Datagram Messages to Temp Directory").hasArg(false).isRequired(false).create("l"));
     }
 
@@ -445,7 +445,7 @@ public class MulticastSender extends JiniCmd {
         helpTableHead.addRow(" ", "");
         helpTableHead.addRow(" ", "Important : 64 kilobytes is the theoretical maximum size of a complete IP datagram.");
         helpTableHead.addRow(" ", "");
-        helpTableHead.addRow(" ", "Note : There must be enough space in the temporary directory of your OS. ");
+        helpTableHead.addRow(" ", "Note : There must be enough space allocated for the temporary directory of your OS. ");
         helpTableHead.addRow(" ", "The Logs are written in Directory 'JiniCommandsLog' of the OS Specific Temporary Directory.");
         helpTableHead.addRow(" ", "Temp Directory of your OS : " + this.getOsSpecificTempDirectory());
         helpTableHead.print();
@@ -461,8 +461,9 @@ public class MulticastSender extends JiniCmd {
 
         
         
-        TablePrinter helpTableFoot= new TablePrinter("Example :");
-        helpTableFoot.addRow("multicastsender --port 8888 --file /FULL/PATH/TO/FILE.txt --multicastgroup 224.2.2.3");
+        TablePrinter helpTableFoot= new TablePrinter("", "Example");
+        helpTableFoot.addRow("Without Logging :", "multicastsender --port 8888 --file /FULL/PATH/TO/FILE.txt --multicastgroup 224.2.2.3");
+        helpTableFoot.addRow("With Logging :", "multicastsender --port 8888 --file /FULL/PATH/TO/FILE.txt --multicastgroup 224.2.2.3 --log");
         
         helpTableFoot.print();
 
