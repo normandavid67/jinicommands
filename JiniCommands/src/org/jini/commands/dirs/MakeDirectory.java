@@ -24,20 +24,15 @@
  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- 
-  
+
+
  For a copy of the License type 'license'
  */
 package org.jini.commands.dirs;
 
 import java.io.File;
 import jinicommands.JiniCmd;
-import org.apache.commons.cli.BasicParser;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
-import org.apache.commons.cli.Options;
+import org.apache.commons.cli.*;
 import org.jini.commands.helper.TablePrinter;
 
 /**
@@ -130,7 +125,7 @@ public class MakeDirectory extends JiniCmd {
         File dstDir = new File(destinationDir);
 
         if (!dstDir.exists()) {
-            
+
             if (dstDir.mkdir() == false) {
                 this.setJcError(true);
                 this.addErrorMessages("Error : Could not crearte Directory [" + destinationDir + "].");

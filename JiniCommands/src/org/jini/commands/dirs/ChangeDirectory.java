@@ -24,25 +24,20 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- 
-  
+
+
  For a copy of the License type 'license'
  */
 package org.jini.commands.dirs;
 
 import java.io.File;
 import jinicommands.JiniCmd;
-import org.apache.commons.cli.BasicParser;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
-import org.apache.commons.cli.Options;
+import org.apache.commons.cli.*;
 import org.jini.commands.helper.TablePrinter;
 
 /**
  * Change Location command
- * 
+ *
  * @author Norman David <normandavid67@gmail.com>
  * @since JiniCommands version 0.1
  * @version 1.0
@@ -55,7 +50,7 @@ public class ChangeDirectory extends JiniCmd {
 
     public ChangeDirectory() {
     }
-    
+
     /**
      * In this method all the Command specific Command Line options are defined.
      *
@@ -67,12 +62,12 @@ public class ChangeDirectory extends JiniCmd {
         // option -h --help : Help
         Option Help = new Option("h", "help", false, "Show Help.");
         this.jcOptions.addOption(Help);
-        
-        // option -p --path 
+
+        // option -p --path
         this.jcOptions.addOption(OptionBuilder.withLongOpt("path").withDescription("Path where the Directory will be changed").hasArg().isRequired(false).create("p"));
     }
-    
-   
+
+
     /**
      * In this method all the execution of the specific Command takes place
      */
@@ -90,7 +85,7 @@ public class ChangeDirectory extends JiniCmd {
                 // Print the help
                 this.printHelp();
             }
-            
+
 
             // Check for -p option : Path
             if (jcCmd.hasOption("p")) {
@@ -113,9 +108,9 @@ public class ChangeDirectory extends JiniCmd {
     }
 
     /**
-     * Change location 
-     * 
-     * @param dirLocation 
+     * Change location
+     *
+     * @param dirLocation
      */
     private void changeDirectory(String dirLocation) {
         if ((dirLocation == null) || (dirLocation.length() == 0)) {
@@ -131,20 +126,20 @@ public class ChangeDirectory extends JiniCmd {
         if (this.getJcError() == false) {
             File file = new File(dirLocation);
             String absolutePathOfDir = file.getAbsolutePath();
-                  
 
-            // Set the System property 
+
+            // Set the System property
             System.setProperty("user.dir", absolutePathOfDir);
             System.out.println("Changed Directory to : " + System.getProperty("user.dir"));
 
             this.done = true;
         }
     }
-    
+
     /**
      * Directory tester
      * @param directoryName
-     * @return 
+     * @return
      */
     private boolean isDir(String directoryName) {
         if ((directoryName != null) && (directoryName.length() > 0)) {
@@ -160,13 +155,13 @@ public class ChangeDirectory extends JiniCmd {
 
     /**
      * Getter method of the location of the user.
-     * 
-     * @return 
+     *
+     * @return
      */
     private static String getWorkingDirectory() {
         return System.getProperty("user.dir");
     }
-    
+
     /**
      * Prints out all Command Line Options in a table
      *
@@ -175,7 +170,7 @@ public class ChangeDirectory extends JiniCmd {
         TablePrinter helpTableHead = new TablePrinter("Command Name : ", "cd");
         helpTableHead.addRow("SYNOPSIS : ", "cd [OPTION]...");
         helpTableHead.addRow("DESCRIPTION : ", "Change Directory.");
-        
+
         helpTableHead.print();
         TablePrinter helpTable = new TablePrinter("Short Opt", "Long Opt", "Argument", "Desc", "Short Option Example", "Long Option Example");
         helpTable.addRow("-h", "--help", "not required", "Show this help.", "help -h", "help --help");
