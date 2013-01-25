@@ -24,30 +24,19 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- 
-  
+
+
  For a copy of the License type 'license'
  */
 package org.jini.commands.compress;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 import jinicommands.JiniCmd;
-import org.apache.commons.cli.BasicParser;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
-import org.apache.commons.cli.Options;
+import org.apache.commons.cli.*;
 import org.jini.commands.helper.TablePrinter;
 import org.jini.commands.utils.PrintChar;
 
@@ -93,7 +82,7 @@ public class ZipDirectory extends JiniCmd {
 
             // Read the -h option
             if (jcCmd.hasOption('h')) {
-                // Print help 
+                // Print help
                 printHelp();
             }
 
@@ -111,7 +100,7 @@ public class ZipDirectory extends JiniCmd {
 
 
                     // check if the option is a directory
-                    // with this the user does not have to give a full path. 
+                    // with this the user does not have to give a full path.
                     if (this.isDir(dir) == false) {
                         dir = getWorkingDirectory() + File.separator + dir;
                     }
@@ -188,7 +177,7 @@ public class ZipDirectory extends JiniCmd {
             byte[] buffer = new byte[1024];
 
             int length;
-            //copy the file content in bytes 
+            //copy the file content in bytes
             while ((length = inStream.read(buffer)) > 0) {
                 outStream.write(buffer, 0, length);
             }
